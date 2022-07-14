@@ -89,18 +89,18 @@ namespace Medical.Controllers
         // ============ 柏鈞 =================
         public IActionResult productList()
         {
-            return View(GetProducts(1));
+            return View(GetProducts(/*1*/));
         }
         [HttpPost]
         public IActionResult productList(int currentPageIndex)
         {
-            return View(GetProducts(currentPageIndex));
+            return View(GetProducts(/*currentPageIndex*/));
         }
 
 
-        private CProductForShowViewModel GetProducts(int currentPage)
+        private CProductForShowViewModel GetProducts(/*int currentPage*/)
         {
-            int maxRows = 8;
+            //int maxRows = 8;
             CProductForShowViewModel prodModel = new CProductForShowViewModel()
             {
                 productList = _medicalContext.Products.ToList(),
@@ -113,14 +113,14 @@ namespace Medical.Controllers
             prodModel.prodSpec = (from prod in this._medicalContext.ProductSpecifications
                                   select prod)
                         //.Where(p=>p.Product.ProductBrand.ProductBrandName == "雷朋") 條件
-                        .OrderBy(prod => prod.Product.ProductName)
-                        .Skip((currentPage - 1) * maxRows)
-                        .Take(maxRows).ToList();
+                        .OrderBy(prod => prod.Product.ProductName).ToList();
+                        //.Skip((currentPage - 1) * maxRows)
+                        //.Take(maxRows).ToList();
 
-            double pageCount = (double)((decimal)this._medicalContext.Products.Count() / Convert.ToDecimal(maxRows));
-            prodModel.PageCount = (int)Math.Ceiling(pageCount);
+            //double pageCount = (double)((decimal)this._medicalContext.Products.Count() / Convert.ToDecimal(maxRows));
+            //prodModel.PageCount = (int)Math.Ceiling(pageCount);
 
-            prodModel.CurrentPageIndex = currentPage;
+            //prodModel.CurrentPageIndex = currentPage;
 
             return prodModel;
         }

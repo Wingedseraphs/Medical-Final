@@ -33,24 +33,30 @@
         @*=============== Left--Part--Start================*@
         <div class="col-md-2 h-100">
 
-            
+            <form id="myform" action="productList" method="post">
+                <input type="range" class="form-range" min="0" max="2000" id="customRange2">
 
-            <h3 class="">篩選條件</h3>
-            <hr />
-            <h4>種類</h4>
-            @foreach (var cprod in Model.brandList)
-            {
-                <input class="mt-3" type="checkbox" name="productBrandId" value="@cprod.ProductBrandId" />@:&nbsp<label style="font-size:21px">@cprod.ProductBrandName</label>
+                <label>關鍵字搜尋</label>
+                <input type="search" class="form-control rounded mt-1" placeholder="搜尋.." aria-label="Search" aria-describedby="search-addon" style="margin-left: 0;" />
                 <br />
-            }
-            <hr />
-            <h4>品牌</h4>
-            @foreach (var cprod in Model.cateList)
-            {
-                <input class="mt-3" type="checkbox" name="productCategoryId" value="@cprod.ProductCategoryId" />@:&nbsp<label style="font-size:21px">@cprod.ProductCategoryName</label>
-                <br />
-            }
-            <hr />
+                <h3 class="">篩選條件</h3>
+                <hr />
+                <h4>品牌</h4>
+                @foreach (var cprod in Model.brandList)
+                {
+                    //string test = "b" + cprod.ProductBrandId;
+                    <input id="" class="mt-3" onchange="test()" type="checkbox" name="brand" value="@cprod.ProductBrandId" />@:&nbsp<label style="font-size:21px">@cprod.ProductBrandName</label>
+                    <br />
+                }
+                <hr />
+                <h4>種類</h4>
+                @foreach (var cprod in Model.cateList)
+                {
+                    <input class="mt-3" onchange="test()" type="checkbox" name="cate" value="@cprod.ProductCategoryId" />@:&nbsp<label style="font-size:21px">@cprod.ProductCategoryName</label>
+                    <br />
+                }
+                <hr />
+            </form>
         </div>
 
         @*=============== Left--Part--End================*@
@@ -87,7 +93,10 @@
                 {
                     count++;
 
-                    <div class="col-md-3 col-sm-6 mt-4">
+                    string aa = "b" + cprod.Product.ProductBrandId;
+                    string bb = "c" + cprod.Product.ProductCategoryId;
+
+                    <div class="col-md-3 col-sm-6 mt-4 @aa @bb mycard">
                         <div class="card h-100">
                             <img src="~/images/@cprod.ProductImage" width="140" height="200" class="card-img-top" />
                             <div class="card-body">
@@ -137,10 +146,50 @@
 
 @section Scripts{
 
-    <script type="text/javascript">
-        function PagerClick(index) {
-            document.getElementById("hfCurrentPageIndex").value = index;
-            document.forms[0].submit();
+    @*後端換頁*@
+    @*<script type="text/javascript">
+            function PagerClick(index) {
+                document.getElementById("hfCurrentPageIndex").value = index;
+                document.forms[0].submit();
+            }
+        </script>*@
+
+    <script>
+
+        function test() {
+
+            //console.log($(event.target).val());
+
+
+
+            $(".mycard").hide();
+
+
+
+            //console.log($(`${number}`).siblings().hide());
+            //$(`${number}`).show();
+
+            var bArray = $('input:checkbox:checked[name="brand"]').map(function () { return $(this).val(); }).get(); //陣列
+            var cArray = $('input:checkbox:checked[name="cate"]').map(function () { return $(this).val(); }).get();
+
+            if (bArray.length === 0 && cArray.length === 0)
+                $(".mycard").show();
+            else {
+                $.each(bArray, function (idx, value) {
+                    let number = ".b" + value;
+
+                    console.log(number);
+                    $(`${number}`).show();
+                })
+
+                $.each(cArray, function (idx, value) {
+                    let number = ".c" + value;
+
+                    console.log(number);
+                    $(`${number}`).show();
+                })
+            }
         }
+
     </script>
 }
