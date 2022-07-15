@@ -11,7 +11,13 @@ namespace Medical.Areas.Admin.Controllers
 {[Area(areaName: "Admin")]
     public class AdminMemberListController : Controller
     {
-        
+        private readonly MedicalContext _context;
+
+        public AdminMemberListController(MedicalContext context)  //注入
+        {
+            _context = context;
+        }
+        //======================================================================
         public IActionResult AdminMemberList(CKeyWordViewModel keyVModel)   //管理員帳號登入=>會員清單管理
         {
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USE))  //TODO 還需要寫一個getSession(登出)/未驗證身分
@@ -33,7 +39,15 @@ namespace Medical.Areas.Admin.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-
+        //public IActionResult showRole(int dd)
+        //{
+        //    MedicalContext medicalContext = new MedicalContext();
+        //    Member mem = new Member()
+        //    {
+        //        mem = medicalContext.Members.Where(n => n.Role == dd).Distinct().ToList()
+        //    };
+        //    return View(mem);
+        //}
 
         public IActionResult AdminCreate()
         {
@@ -95,6 +109,42 @@ namespace Medical.Areas.Admin.Controllers
             }
             return RedirectToAction("AdminMemberList","AdminMemberList");
         }
-    }
 
+        public IActionResult TestRole(CKeyWordViewModel keyVModel)
+        {
+            IEnumerable<CMemberAdminViewModel> list = null;
+            list = _context.Members.Where(n => n.Role == 1).Select(n => new CMemberAdminViewModel
+            {
+                MemberId=n.MemberId,
+                MemberName=n.MemberName,
+                Role=n.Role,
+                Address=n.Address
+            });
+
+            return View(list);
+        }
+        //=================for Ajax API
+  
+        //public IActionResult showRolebyAjax(CMemberAdminViewModel AdminVModel)
+        //{
+
+        //    Member mb = _context.Members.FirstOrDefault(n => n.Email == AdminVModel.Email);
+        //    if (String.IsNullOrEmpty(AdminVModel.Email))
+        //    {
+        //        AdminVModel.emailState = "請填入信箱";
+        //    }
+        //    else if (mb != null)
+        //    {
+        //        AdminVModel.emailState = "帳號已存在";
+        //    }
+        //    else
+        //    {
+        //        user.emailState = "帳號可使用";
+        //    }
+
+        //    return Content(user.emailState, "text/html", System.Text.Encoding.UTF8);
+        //}
+
+
+    }
 }

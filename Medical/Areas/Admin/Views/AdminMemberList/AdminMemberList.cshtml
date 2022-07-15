@@ -5,16 +5,27 @@
     Layout = "~/Areas/Admin/Admin_Layout.cshtml";
 }
 
-
+<a asp-action="AdminCreate" class="fas fa-user-plus">新增會員</a>
 <h1>會員資料管理頁面</h1>
-@using (Html.BeginForm())
-{
-    @:關鍵字 @Html.TextBox("txtKeyword")
-    <input type="submit" value="查詢" />
-}
-<p>
-    <a asp-action="AdminCreate">新增會員</a>
-</p>
+<div class="col-md-3">
+    <div>
+        @using (Html.BeginForm())
+        {
+            @:關鍵字 @Html.TextBox("txtKeyword")
+            <input type="submit" value="查詢" />
+        }
+
+        <a>權限篩選</a>
+        <select id="roleSelect">
+
+            <option>選擇權限</option>
+            <option id="role1">權限1</option>
+            <option id="role2">權限2</option>
+            <option id="role3">權限3</option>
+
+        </select>
+    </div>
+</div>
 
 <table class="table">
     <thead>
@@ -139,4 +150,22 @@
 <br />
 <br />
 <br />
+@section Scripts{
+    <script>
+        const roleSelect = document.querySelector("#roleSelect");
 
+        roleSelect.addEventListener('change', () => {
+            alert($('#roleSelect').val());
+            LoadTable();
+
+        });
+
+        async function LoadTable() {
+            const selectedRoleIndex = roleSelect.selectedIndex;
+            console.log(selectedRoleIndex);  //index 0 1 2 3
+            const selectedRole = roleSelect.options[roleSelect.selectedIndex].value;
+            console.log(selectedRole);   //權限1.權限2..
+
+        };
+    </script>
+}
