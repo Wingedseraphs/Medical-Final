@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<Medical.Models.Member>
-
+@*管理者LayOut*@
 @{
     ViewData["Title"] = "AdminLoginMemberList";
     Layout = "~/Areas/Admin/Admin_Layout.cshtml";
@@ -7,10 +7,15 @@
 
 
 <h1>會員資料管理頁面</h1>
-
+@using (Html.BeginForm())
+{
+    @:關鍵字 @Html.TextBox("txtKeyword")
+    <input type="submit" value="查詢" />
+}
 <p>
-    <a asp-action="Create">新增會員</a>
+    <a asp-action="AdminCreate">新增會員</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>

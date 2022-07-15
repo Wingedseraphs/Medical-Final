@@ -1,4 +1,6 @@
 ﻿using Medical.Models;
+using Medical.ViewModel;
+using Medical.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,22 +12,42 @@ namespace Medical.Areas.Admin.Controllers
     public class AdminMemberListController : Controller
     {
         
-        public IActionResult AdminMemberList()   //管理員帳號登入=>會員清單管理
+        public IActionResult AdminMemberList(CKeyWordViewModel keyVModel)   //管理員帳號登入=>會員清單管理
         {
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USE))  //TODO 還需要寫一個getSession(登出)/未驗證身分
             {
                 MedicalContext medicalContext = new MedicalContext();
-                //CMemberAdminViewModel vModel = new CMemberAdminViewModel();
                 IEnumerable<Member> datas = null;
-
-                datas = from t in medicalContext.Members
-                        select t;
-
+                if (string.IsNullOrEmpty(keyVModel.txtKeyword))
+                {
+                    datas = from t in medicalContext.Members
+                            select t;
+                }
+                else
+                {
+                    datas = medicalContext.Members.Where(t => t.MemberName.Contains(keyVModel.txtKeyword)||t.Email.Contains(keyVModel.txtKeyword)||t.Phone.Contains(keyVModel.txtKeyword));
+                }
                 return View(datas);
             }
+            else
             return RedirectToAction("Index", "Home");
         }
 
+
+
+        public IActionResult AdminCreate()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult AdminCreate(CRegisterViewModel vModel)
+        {
+            MedicalContext medicalDb = new MedicalContext();
+            medicalDb.Members.Add(vModel.member);
+
+            medicalDb.SaveChanges();
+            return RedirectToAction("AdminMemberList", "AdminMemberList");
+        }
         public IActionResult Delete(int? id)
         {
             MedicalContext db = new MedicalContext();
@@ -44,7 +66,7 @@ namespace Medical.Areas.Admin.Controllers
             MedicalContext db = new MedicalContext();
             Member mem = db.Members.FirstOrDefault(c => c.MemberId == id);
             if (mem == null)
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("AdminMemberList", "AdminMemberList");
             return View(mem);
         }
         [HttpPost]
