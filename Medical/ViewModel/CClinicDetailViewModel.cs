@@ -12,10 +12,16 @@ namespace Medical.ViewModel
     {
 
         private ClinicDetail _clinicDetail;
+        private Department _department;
+        private Reserve _reserve;
+        private Doctor _doctor;
+        private Period _period;
+        private ClinicRoom _clinicRoom;
 
         public CClinicDetailViewModel()
         {
             _clinicDetail = new ClinicDetail();
+            _reserve = new Reserve();
         }
         public ClinicDetail clinicDetail
         {
@@ -65,17 +71,17 @@ namespace Medical.ViewModel
             set { _clinicDetail.LimitNum = value; }
         }
 
-        public string doctor
+        public string doctorname
         {
             set; get;
         }
 
-        public int period
+        public int periodID
         {
             set; get;
         }
 
-        public int room
+        public int roomID
         {
             set; get;
         }
@@ -85,15 +91,36 @@ namespace Medical.ViewModel
             set; get;
         }
 
-        public int id
+        public int clinicDetailId
         {
             set; get;
         }
 
-        public virtual Department Department { get; set; }
-        public virtual Doctor Doctor { get; set; }
-        public virtual Period Period { get; set; }
-        public virtual ClinicRoom Room { get; set; }
-        public virtual ICollection<Reserve> Reserves { get; set; }
+        public virtual Department Department
+        {
+            get { return _department; }
+            set { _department = value; }
+        }
+    
+        public virtual Doctor Doctor
+        {
+            get { return _doctor; }
+            set { _doctor = value; }
+        }
+        public virtual Period Period
+        {
+            get { return _period; }
+            set { _period = value; }
+        }
+        public virtual ClinicRoom Room
+        {
+            get { return _clinicRoom; }
+            set { _clinicRoom = value; }
+        }
+        public virtual Reserve Reserves
+        {
+            get { return _reserve; }
+            set { _reserve = value; }
+        }
     }
 }
