@@ -3,232 +3,343 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>CartViewList</h1>
-
 <br />
+<ul class="breadcrumb" style=" font-size: 18px;margin:auto;">
+    <li class="breadcrumb-item"><a href="">首頁</a></li>
+    <li class="breadcrumb-item"><a href="~/Product/ProductList">產品列表</a></li>
+    <li class="breadcrumb-item"><a href="~/Product/CartViewList">購物車</a></li>
+</ul>
+<div style="background-color: rgb(236, 236, 236); padding:1em;" class="mt-2">
+    <div class="container" style="padding: 0%;">
+        <div class="row" style="width: 100%;height:100%;margin: 0%;">
+            <!-- left Start -->
+            <div class="col col-md-8 col-sm-12" style="padding: 0%;padding-right: 1em;height: 100%;">
+                <div style="background-color: white;width: 100%;border-radius: 10px;height: 100%;padding-bottom: 2em;padding-top:10px">
+                    <p class="mt-2" style="margin-left: 1em;font-size:larger;font-weight:bold;margin-bottom:10px">我的購物車</p>
+                    <hr style="width: 93%;margin: auto;">
 
-<div class="row" style="align-items:center;width:98%;margin:auto">
-    <div class="col-md-2"><h3>我的購物車</h3></div>
-    <div class="col-md-3" style="padding-left:0;">
-        <ul class="breadcrumb" style="background-color: white; font-size: 18px;margin:auto;">
-            <li class="breadcrumb-item"><a href="">首頁</a></li>
-            <li class="breadcrumb-item"><a href="~/Product/ProductList">產品列表</a></li>
-            <li class="breadcrumb-item"><a href="~/Product/CartViewList">購物車</a></li>
-        </ul>
-    </div>
-</div>
+                    @{ int pay = 0;
+                        int ship = 60;
+                        foreach (var item in Model)
+                        {
+                            <input type="hidden" id="getMemid" name="Memberid" value=@item.MemberId />
 
-
-
-<div class="container-fluid" style="width: 100%; margin: auto;  margin-top: 20px; margin-bottom: 20px;">
-
-    <div style="text-align: center ;">
-        <a class="btn btn-dark" href="~/Product/ProductList" style="background-color: rgb(19, 51, 86); color: white; font-size: 20px; height: 46px; width: 100%; margin: auto;">繼續購物</a>
-    </div>
-
-    <hr>
-
-    <div style="background-color: rgb(236, 236, 236); ">
-
-        @{ int pay = 0;
-            decimal tax = 0;
-            foreach (var item in Model)
-            {
-                pay += item.小計;
-
-                <!-- =================================  整組模型 Start  =================================== -->
-                <div style="height: 200px; max-height: 200px; padding: 10px; display: flex; flex-direction: row">
-                    <div style="  background-color: white; width: 350px; max-width: 350px; height: 180px ; max-height:180px;">
-                        <img src="~/images/@item.prodspec.ProductImage" alt="" style="margin-left: 50px; margin-right:50px ;  object-fit: fill; width: 250px; height:100%; ">
-                    </div>
-
-                    <!-- ==========================  card模型 Start  ============================== -->
-                    <div class="card" style="  margin-left: 10px;   background-color: white; width: 100%;  height: 180px ; max-height:180px;">
-                        <br>
-                        <div class="card-body" style="display: flex; justify-content: space-around;margin-top: 15px;">
-                            <h4> @Html.DisplayFor(modelItem => item.prod.ProductName)</h4>
-                            <p><span>數量:&nbsp;</span><input type="number" value="@Html.DisplayFor(modelItem => item.cart.ProductAmount)" style="width: 60px; text-align: center;"> &nbsp;&nbsp; &nbsp;<span>價格:&nbsp;</span> <input type="text" value="@Html.DisplayFor(modelItem => item.prodspec.UnitPrice) " readonly style="width: 120px; text-align: center;"></p>
-                        </div>
-
-                        <form action="CartViewList" method="post">
-                            <div class="card-footer" style="padding: 0; max-height: 50px; height: 50px;">
-                                <a class="btn btn-secondary" href="~/Product/ProductDetail?productName=@item.prod.ProductName" style="border: 0; background-color: transparent; width: 64%; height: 100%;color:black;font-size:20px">瀏覽產品</a>
-                                <input type="hidden" name="ShoppingCartID" value="@item.cart.ShoppingCartId" />
-                                <button onclick="return confirm('確定要刪除資料嗎?')" id="clearCart" style="border: 0; background-color: transparent; width: 34%; height: 100%; font-size: 20px; font-weight:bold;border-left: 1px solid rgb(229, 229, 229);">刪除</button>
-                            </div>
-                        </form>
-
-                    </div>
-                    <!-- ==========================card模型 End ============================== -->
+                            pay += item.小計;
+                            <!-- 卡片一組 Start -->
+                            <form action="/" id="myform" method="post" enctype="multipart/form-data">
+                                <div class="row mt-3 prodDiv" style="width: 98%;height: 10em;margin: auto;">
+                                    <div class="col col-md-3" style="margin: auto;height: 100%;padding-right: 2px;">
+                                        <img class="mt-2" src="~/images/@item.prodspec.ProductImage" alt="" style="height: 80%;width: 90%;max-width:140px;margin-bottom: 15px;background-color: rgb(171, 171, 171);">
+                                    </div>
+                                    <div class="col col-md-6 prod" style="height: 100%;">
+                                        <input type="hidden" name="ShoppingCartId" value="@item.cart.ShoppingCartId" />
+                                        <input type="hidden" name="ProductId" value="@item.cart.ProductId" />
+                                        <p class="mt-3" style="margin-bottom:0%;font-size: larger;color: gray;margin-bottom:10px">@item.prod.ProductName</p>
+                                        <p class="mt-3" style="font-size:medium ;color: gray;display:inline;"> @item.prodspec.UnitPrice</p><span> 庫存:</span><span>@item.prod.Stock</span><br />
+                                        <div class="btn-group mt-4" role="group" aria-label="Basic example" style="text-align: center;">
+                                            <button type="button" class="btn btn-outline-dark btn-sm btnAdd">+</button>
+                                            <input class="inputNum" type="number" style="height: 2em;text-align:center" value="@item.cart.ProductAmount" name="ProductAmount" min="1" max="@item.prod.Stock" oninput="if(value>@item.prod.Stock)value=@item.prod.Stock;if(value<1)value=1" required>
+                                            <button type="button" class="btn btn-outline-dark btn-sm btnReduce">-</button>
+                                        </div>
+                                    </div>
+                                    <div class="col col-md-3" style="height: 100%;padding-right: 0%;">
+                                        <div style="width: 100%;height:50%;text-align: end;padding-right: 1em;">
+                                            <p class="mt-4 sub" style="font-size: larger;color: rgb(0, 0, 0); font-weight: bold;">@item.小計</p>
+                                        </div>
+                                        <div style="width: 100%;height:50%;text-align: end;padding-right: 1em;">
+                                            <button type="button" class="btn btn-light btnClick"><i class="fa-solid fa-trash-can"></i> &nbsp; 刪除 </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <hr style="width: 93%;margin: auto;" class="mt-3">
+                            <!-- 卡片一組 End -->
+                        }
+                    }
                 </div>
 
-                tax = pay * 0.05m;
-            }
-        }
-        <!-- =================================整組模型 End =================================== -->
-        <!-- ===============================  下半部 Start  =====================================-->
-        <div style="height: 250px; max-height: 250px; padding: 10px; display: flex; flex-direction: row;">
+            </div>
 
-            <div style="   background-color: rgba(255, 255, 255, 0.679); width: 650px; max-width: 650px; height: 100%; ">
-                <button style="width: 100%; height: 32%; border: 0; margin-bottom: 3px; background-color: white;" type="button" class="" data-bs-toggle="modal" data-bs-target="#myModal1">送貨方式</button>
-                <div class="modal fade" id="myModal1" tabindex="-1">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h3 class="modal-title">訂單配送</h3>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
-                                <h5>注意事項</h5>
-                                <br />
-                                <ul>
-                                    <li>訂單一經處理，您將會收到一封郵件，確認訂單已成立。</li>
-                                    <li>配送時間須配合貨運公司。</li>
-                                    <li>請注意，訂單一經確認，便不得更改送貨地址。</li>
-                                    <li>由於惡劣天氣、自然災害或其他無法控制的狀況，訂單運送可能會延遲。</li>
-                                </ul>
-                                <br />
-                                <h5>配送方式</h5>
-                                <br />
-                                <p>
-                                    宅配
-                                    <ul>
-                                        <li> 費用 : 需加收運費。</li>
-                                        <li> 送貨時間 : 由您接獲發貨確認電郵起計3至7個工作天。</li>
-                                    </ul>
-                                </p>
+            <!-- left End -->
+            <div class="col col-md-4" style="padding: 0%;">
+                <div style="background-color: white; width: 100%; border-radius: 10px; padding-top: 10px;padding-bottom:1em">
+                    <p class="mt-2" style="margin-left: 1em; font-size: larger; font-weight: bold;">購物車試算</p>
+                    <div style="width: 80%;margin-left: 2em;">
+                        <select id="mySelect" class="form-select" aria-label="Default select example" style="margin-bottom: 5px;">
+                            <option selected>請選擇優惠券</option>
+                        </select>
+                        <span style="font-size:x-small;">預計出貨日期 : @DateTime.Now.AddDays(3).ToString("D") (如遇假日可能會有所不同)</span>
+                    </div>
+                    <hr style="width: 85%;margin: auto;" class="mt-3">
+                    <div class="mt-4" style="width: 80%; display: flex ; justify-content: space-between; margin: auto;">
+                        <h6>交易金額:</h6><h6 id="tranSum">@pay.ToString("C0")</h6>
+                    </div>
+                    <div style="width: 80%; display: flex ; justify-content: space-between; margin: auto;">
+                        <h6>運費:</h6><h6 id="ship">@ship.ToString("C0") </h6>
+                    </div>
+                    <hr style="width: 85%;margin: auto;" class="mt-4">
 
-                                <p>
-                                    7-11超商付款取貨
-                                    <ul>
-                                        <li> 費用 : 需加收運費。</li>
-                                        <li> 送貨時間 : 由您接獲發貨確認電郵起計3至7個工作天。</li>
-                                    </ul>
-                                </p>
+                    <div style="width: 80%; display: flex ; justify-content: space-between; margin: auto; margin-top:15px">
+                        <h6>總額:</h6><h6 style="color: red" id="TotalSum">@((pay+ship).ToString("C0"))</h6>
+                    </div>
+                    <div style=" width: 85%; margin: auto; margin-top: 15px;">
+                        <a class="btn btn-dark" href="" style="width: 97%; height:40px;margin-left: 10px;color: white;">前往結帳</a>
+                        <a class="btn btn-light mt-2" href="" style="width: 97%; height:40px;margin-left: 10px;color: black;">繼續購物</a>
 
-                                <p>
-                                    到店取貨
-                                    <ul>
-                                        <li> 費用 : 免收運費。</li>
-                                        <li> 送貨時間 : 您將會收到電郵通知，確認可於門市取貨的時間。</li>
-                                        <li> 到店取貨需出示附有照片的身分證明文件 (例如護照、身分證、駕駛執照) </li>
-                                    </ul>
-                                </p>
-                            </div>
-                            @*<div class="modal-footer"></div>*@
-                        </div>
                     </div>
                 </div>
-                <button style="width: 100%; height: 32%; border: 0; margin-bottom: 3px; background-color: white;" type="button" class="" data-bs-toggle="modal" data-bs-target="#myModal2">付款方式</button>
-                <div class="modal fade" id="myModal2" tabindex="-1">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h3 class="modal-title">付款方式</h3>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                <div class="mt-3" style="background-color: rgba(0, 0, 0);width: 100%;border-radius: 10px;">
+                    <div style="width: 100%;border-radius: 10px;height: 100%;margin-bottom: 2em;padding-top:10px">
+                        <p class="mt-2" style="margin-left: 1em; font-size: larger; font-weight: bold;">線上購物政策</p>
+                        <div style="background-color: rgba(255, 255, 255, 0.679); width: 100%; height: 100%; ">
+                            <button style="width: 100%; height:4em; " type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#myModal1">送貨方式</button>
+                            <div class="modal fade" id="myModal1" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h3 class="modal-title">訂單配送</h3>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h5>注意事項</h5>
+                                            <br />
+                                            <ul>
+                                                <li>訂單一經處理，您將會收到一封郵件，確認訂單已成立。</li>
+                                                <li>配送時間須配合貨運公司。</li>
+                                                <li>請注意，訂單一經確認，便不得更改送貨地址。</li>
+                                                <li>由於惡劣天氣、自然災害或其他無法控制的狀況，訂單運送可能會延遲。</li>
+                                            </ul>
+                                            <br />
+                                            <h5>配送方式</h5>
+                                            <br />
+                                            <p>
+                                                宅配
+                                                <ul>
+                                                    <li> 費用 : 需加收運費。</li>
+                                                    <li> 送貨時間 : 由您接獲發貨確認電郵起計3至7個工作天。</li>
+                                                </ul>
+                                            </p>
+
+                                            <p>
+                                                7-11超商付款取貨
+                                                <ul>
+                                                    <li> 費用 : 需加收運費。</li>
+                                                    <li> 送貨時間 : 由您接獲發貨確認電郵起計3至7個工作天。</li>
+                                                </ul>
+                                            </p>
+
+                                            <p>
+                                                到店取貨
+                                                <ul>
+                                                    <li> 費用 : 免收運費。</li>
+                                                    <li> 送貨時間 : 您將會收到電郵通知，確認可於門市取貨的時間。</li>
+                                                    <li> 到店取貨需出示附有照片的身分證明文件 (例如護照、身分證、駕駛執照) </li>
+                                                </ul>
+                                            </p>
+                                        </div>
+                                        @*<div class="modal-footer"></div>*@
+                                    </div>
+                                </div>
                             </div>
-                            <div class="modal-body">
-                                <p>我們提供的歐富寶和LinePay付款方式。如需使用其他付款方式，請致電 0800 123 4567 與客戶服務中心聯繫。</p>
-                                <br />
-                                <p>漢克斯眼科採用加密系統，以保障客戶的個人與付款資料。</p>
-                                <br />
-                                <p>如欲獲取更多資訊或協助，歡迎聯絡我們的客戶服務中心。</p>
+                            <button style="width: 100%; height:4em;" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#myModal2">付款方式</button>
+                            <div class="modal fade" id="myModal2" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h3 class="modal-title">付款方式</h3>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>我們提供的歐富寶和LinePay付款方式。如需使用其他付款方式，請致電 0800 123 4567 與客戶服務中心聯繫。</p>
+                                            <br />
+                                            <p>漢克斯眼科採用加密系統，以保障客戶的個人與付款資料。</p>
+                                            <br />
+                                            <p>如欲獲取更多資訊或協助，歡迎聯絡我們的客戶服務中心。</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <button style="width: 100%; height: 32%; border: 0; margin-bottom: 3px; background-color: white;" type="button" class="" data-bs-toggle="modal" data-bs-target="#myModal3">退換貨規定</button>
-                <div class="modal fade" id="myModal3" tabindex="-1">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h3 class="modal-title">退換貨規定</h3>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
-                                <h5>退換貨須知</h5>
-                                <br />
-                                <ul>
-                                    <li>
-                                        若因商品本身瑕疵狀況 （瑕疵商品定義：非人為因素問題造成的故障、毀損、磨損、擦傷、刮傷、髒污或包裝破損等），請務必在收到商品後先拍照記錄，再來信客服，以確認為商品本身瑕疵或為運送上問題及後續退換辦理。
-                                    </li>
+                            <button style="width: 100%; height:4em;margin-bottom: 1em;" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#myModal3">退換貨規定</button>
+                            <div class="modal fade" id="myModal3" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h3 class="modal-title">退換貨規定</h3>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h5>退換貨須知</h5>
+                                            <br />
+                                            <ul>
+                                                <li>
+                                                    若因商品本身瑕疵狀況 （瑕疵商品定義：非人為因素問題造成的故障、毀損、磨損、擦傷、刮傷、髒污或包裝破損等），請務必在收到商品後先拍照記錄，再來信客服，以確認為商品本身瑕疵或為運送上問題及後續退換辦理。
+                                                </li>
 
-                                    <li class="mt-2">商品退換，請務必保持原商品完整（無異味髒污、磨損毀壞、加工改造等）、包裝齊全性（內外包裝、封膜、封口、隨貨文件、贈品等），並使用原紙箱送回，若因包裝不妥導致寄回損壞，將不受理退換貨申請。</li>
-                                    <li class="mt-2">該商品除了瑕疵及商品有誤之外，其他原因產生的退貨運費，皆由消費者自行負擔。退換貨完成申請後，請自行自費寄至 nueva 指定收貨地址。更換商品以一次為限，如遇商品缺貨或其他因素無法出貨的情況則退款處理。</li>
-                                    <li class="mt-2">特價商品，恕不接受退換貨，請見諒。</li>
-                                </ul>
-                                <br />
-                                <h5>退款處理</h5>
-                                <br />
-                                <p>
-                                    若退貨狀況成立，漢克斯眼科 將於7-14個工作天內（不包含例假日）以下列方式退款給您：
-                                    <ul>
-                                        <li>
-                                            刷卡付款者：直接把款項刷退至原付款的信用卡帳號中。因各刷卡行結帳日不同之關係，實際入帳入還請洽詢您的銀行。
+                                                <li class="mt-2">商品退換，請務必保持原商品完整（無異味髒污、磨損毀壞、加工改造等）、包裝齊全性（內外包裝、封膜、封口、隨貨文件、贈品等），並使用原紙箱送回，若因包裝不妥導致寄回損壞，將不受理退換貨申請。</li>
+                                                <li class="mt-2">該商品除了瑕疵及商品有誤之外，其他原因產生的退貨運費，皆由消費者自行負擔。退換貨完成申請後，請自行自費寄至 nueva 指定收貨地址。更換商品以一次為限，如遇商品缺貨或其他因素無法出貨的情況則退款處理。</li>
+                                                <li class="mt-2">特價商品，恕不接受退換貨，請見諒。</li>
+                                            </ul>
+                                            <br />
+                                            <h5>退款處理</h5>
+                                            <br />
+                                            <p>
+                                                若退貨狀況成立，漢克斯眼科 將於7-14個工作天內（不包含例假日）以下列方式退款給您：
+                                                <ul>
+                                                    <li>
+                                                        刷卡付款者：直接把款項刷退至原付款的信用卡帳號中。因各刷卡行結帳日不同之關係，實際入帳入還請洽詢您的銀行。
 
-                                        </li>
-                                        <li> 完匯將以 E-MAIL 告知。</li>
-                                    </ul>
-                                </p>
+                                                    </li>
+                                                    <li> 完匯將以 E-MAIL 告知。</li>
+                                                </ul>
+                                            </p>
 
-                                <p>
-                                    7-11超商付款取貨
-                                    <ul>
-                                        <li> 費用 : 需加收運費。</li>
-                                        <li> 送貨時間 : 由您接獲發貨確認電郵起計3至7個工作天。</li>
-                                    </ul>
-                                </p>
+                                            <p>
+                                                7-11超商付款取貨
+                                                <ul>
+                                                    <li> 費用 : 需加收運費。</li>
+                                                    <li> 送貨時間 : 由您接獲發貨確認電郵起計3至7個工作天。</li>
+                                                </ul>
+                                            </p>
 
-                                <p>
-                                    到店取貨
-                                    <ul>
-                                        <li> 費用 : 免收運費。</li>
-                                        <li> 送貨時間 : 您將會收到電郵通知，確認可於門市取貨的時間。</li>
-                                        <li> 到店取貨需出示附有照片的身分證明文件 (例如護照、身分證、駕駛執照) </li>
-                                    </ul>
-                                </p>
+                                            <p>
+                                                到店取貨
+                                                <ul>
+                                                    <li> 費用 : 免收運費。</li>
+                                                    <li> 送貨時間 : 您將會收到電郵通知，確認可於門市取貨的時間。</li>
+                                                    <li> 到店取貨需出示附有照片的身分證明文件 (例如護照、身分證、駕駛執照) </li>
+                                                </ul>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div style="  margin-left: 10px;   background-color: white; width: 100%; ">
-                <div style="width: 80%; display: flex ; justify-content: space-between; margin: auto;margin-top: 25px;">
-                    <h5>交易金額:</h5><h5>@pay.ToString("C0")</h5>
-                </div>
-                <div style="width: 80%; display: flex ; justify-content: space-between; margin: auto;">
-                    <h5>稅額:</h5><h5>@tax.ToString("C0")</h5>
-                </div>
-                <br>
-                <div style="width: 80%; display: flex ; justify-content: space-between; margin: auto; margin-top:15px">
-                    <h5>總額:</h5><h5 style="color: red">@((pay+tax).ToString("C0"))</h5>
-                </div>
-                <div style=" width: 80%; margin: auto; margin-top: 15px;">
-                    <a class="btn btn-dark" href="~/Product/CheckViewList"  style="width: 97%; height:40px;margin-left: 10px;background-color: black;color: white;">前往結帳</a>
-                </div>
-            </div>
+
         </div>
-        <!-- ===============================  下半部 End  =====================================-->
     </div>
-
-
 </div>
+    @section Scripts{
 
-@section Scripts{
+        <script>
 
-    <script>
+            let clearCart = document.getElementById("clearCart");
+            let inputNum = $(".inputNum");
+            let getMemId = $("#getMemid");
+            let mySelect = $("#mySelect");
+            //console.log(clearCart);
+            //console.log(myform)
 
-        let clearCart = document.getElementById("clearCart");
-        console.log(clearCart);
+            inputNum.on("change", function (event) {
+                let prodname = $(event.target).parents(".prod").children("p")[0].innerText;
+                console.log(prodname);
+                let amount = $(event.target)[0].value;
+                Intamount = parseInt(amount);
+                console.log(Intamount);
+                let unitprice = $(event.target).parents(".prod").children("p")[1].innerText;
+                Intunitprice = parseInt(unitprice);
+                console.log(Intunitprice)
+                let Subtotal = $(event.target).parents(".prodDiv").children("div:last-child").children("div:first-child").children("p:first-child")[0];
 
-       /* clearCart.addEventListener("click", function () { "return confirm('確定要刪除資料嗎?')" });*/
+                let myform = $(event.target).parents("form");
+
+                //購物車試算
+                let TotaltranSum = document.querySelector("#tranSum");
+                //console.log(tranSum.innerHTML);
+                let TotalSum = document.querySelector("#TotalSum")
 
 
-    </script>
+                $.ajax({
+                    url: "@Url.Content("~/Product/ChangeCartItem")",
+                    type: "POST",
+                    enctype: "multipart/form-data",
+                    data: myform.serialize(),
 
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+                    success: function (message) {
+                        Subtotal.innerText = Intamount * Intunitprice
+                        tranSum.innerHTML = $(".sub")[0].innerHTML
+                        let newSub = 0;
+                        $(".sub").each(function (i, n) {
+                            var newPrice = parseInt(n.innerText);
+                            newSub += newPrice;
+                        })
+                        TotaltranSum.innerHTML = newSub;
+                        TotalSum.innerHTML = newSub + 60;
 
-}
+                    }
+
+                })
+            })
+
+        //todo
+        //$(".btnAdd").on("click", function () {
+
+        //    let myinputNum = $(event.target).parent().children("input")[0];
+        //    myinputNum.value = 2;
+
+        //})
+
+            $("#mySelect").on("click", function () {
+                let memId = parseInt(getMemId.val());
+                GetCoupon(memId);
+            })
+
+            async function GetCoupon(memberId) {
+                const response = await fetch('@Url.Content("~/Product/GetCoupon")' + `?memId=${memberId}`);
+                const datas = await response.json();
+                console.log(datas);
+
+            }
+
+
+
+
+            $(".btnClick").on("click", function () {
+
+                let myform = $(event.target).parents("form");
+                let deleteitem = $(event.target).parents(".prodDiv");
+
+
+                Swal.fire({
+                    title: '確定要刪除此商品嗎?',
+                    text: "這項商品將被移出購物車!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '確定刪除!',
+                    cancelButtonText: '取消',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire(
+                            '成功!',
+                            '您已將此商品移出購物車',
+                            'success'
+                        )
+
+                        $.ajax({
+                            url: "@Url.Content("~/Product/DeleteCartItem?ShoppingCartId")",
+                            type: "POST",
+                            enctype: "multipart/form-data",
+                            data: myform.serialize(),
+                            success: function (message) {
+                                deleteitem.remove();
+                            }
+                        })
+                    }
+                })
+            })
+
+        </script>
+
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    }

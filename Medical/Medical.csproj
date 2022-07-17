@@ -51,7 +51,6 @@
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Doctors\Data\" />
     <Folder Include="Areas\Doctors\Models\" />
-    <Folder Include="wwwroot\images\" />
     <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 

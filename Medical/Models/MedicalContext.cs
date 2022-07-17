@@ -26,6 +26,8 @@ namespace Medical.Models
         public virtual DbSet<City> Cities { get; set; }
         public virtual DbSet<ClinicDetail> ClinicDetails { get; set; }
         public virtual DbSet<ClinicRoom> ClinicRooms { get; set; }
+        public virtual DbSet<Coupon> Coupons { get; set; }
+        public virtual DbSet<CouponDetail> CouponDetails { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<DepartmentCategory> DepartmentCategories { get; set; }
         public virtual DbSet<Doctor> Doctors { get; set; }
@@ -37,6 +39,7 @@ namespace Medical.Models
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<Orderstate> Orderstates { get; set; }
+        public virtual DbSet<OtherProductImage> OtherProductImages { get; set; }
         public virtual DbSet<Paytype> Paytypes { get; set; }
         public virtual DbSet<Period> Periods { get; set; }
         public virtual DbSet<Product> Products { get; set; }
@@ -58,7 +61,7 @@ namespace Medical.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Medical;Integrated Security=True");
             }
         }
@@ -265,6 +268,36 @@ namespace Medical.Models
                 entity.Property(e => e.RoomName).HasMaxLength(50);
             });
 
+            modelBuilder.Entity<Coupon>(entity =>
+            {
+                entity.ToTable("Coupon");
+
+                entity.Property(e => e.CouponId).HasColumnName("CouponID");
+            });
+
+            modelBuilder.Entity<CouponDetail>(entity =>
+            {
+                entity.ToTable("CouponDetail");
+
+                entity.Property(e => e.CouponDetailId).HasColumnName("CouponDetailID");
+
+                entity.Property(e => e.CouponId).HasColumnName("CouponID");
+
+                entity.Property(e => e.MemberId).HasColumnName("MemberID");
+
+                entity.HasOne(d => d.Coupon)
+                    .WithMany(p => p.CouponDetails)
+                    .HasForeignKey(d => d.CouponId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CouponDetail_Coupon");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.CouponDetails)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CouponDetail_Member");
+            });
+
             modelBuilder.Entity<Department>(entity =>
             {
                 entity.ToTable("Department");
@@ -442,6 +475,8 @@ namespace Medical.Models
 
                 entity.Property(e => e.CityId).HasColumnName("CityID");
 
+                entity.Property(e => e.CouponDetailId).HasColumnName("CouponDetailID");
+
                 entity.Property(e => e.MemberId).HasColumnName("MemberID");
 
                 entity.Property(e => e.OrderDate).HasMaxLength(50);
@@ -458,6 +493,11 @@ namespace Medical.Models
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.CityId)
                     .HasConstraintName("FK_Order_City");
+
+                entity.HasOne(d => d.CouponDetail)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.CouponDetailId)
+                    .HasConstraintName("FK_Order_CouponDetail");
 
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.Orders)
@@ -515,6 +555,26 @@ namespace Medical.Models
                     .HasColumnName("OrderState");
             });
 
+            modelBuilder.Entity<OtherProductImage>(entity =>
+            {
+                entity.ToTable("OtherProductImage");
+
+                entity.Property(e => e.OtherProductImageId).HasColumnName("OtherProductImageID");
+
+                entity.Property(e => e.OtherProductImage1)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("OtherProductImage");
+
+                entity.Property(e => e.ProductId).HasColumnName("ProductID");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.OtherProductImages)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OtherProductImage_Product");
+            });
+
             modelBuilder.Entity<Paytype>(entity =>
             {
                 entity.ToTable("Paytype");
@@ -542,6 +602,8 @@ namespace Medical.Models
                 entity.ToTable("Product");
 
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
+
+                entity.Property(e => e.Cost).HasColumnName("cost");
 
                 entity.Property(e => e.Discontinued).HasColumnName("discontinued");
 

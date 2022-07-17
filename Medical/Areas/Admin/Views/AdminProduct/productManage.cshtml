@@ -167,6 +167,8 @@
 @section Scripts{
 
     <script>
+
+
         let myProductName = $("#myProductName");
         let myProductId = $("#myProductId");
         let myProductPrice = $("#myProductPrice");
@@ -184,6 +186,9 @@
         let productBeforeName = myProductName.val();
         let myFormData = new FormData();
         const fileUploader = document.querySelector('#file-uploader');
+
+
+        console.log(myForm)
 
         fileUploader.addEventListener('change', (e) => {
             console.log(e.target.files[0]); // get file object

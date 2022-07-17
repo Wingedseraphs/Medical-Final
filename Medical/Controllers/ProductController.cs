@@ -159,28 +159,72 @@ namespace Medical.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult AddToCart(CAddToCartViewModel AddToCartvModel)
         {
+            bool isSuccess = true;
+
+            if (AddToCartvModel.txtCount == 0)
+                return RedirectToAction("ProductDetail");
+
+
             Product prod = _medicalContext.Products.FirstOrDefault(p => p.ProductId == AddToCartvModel.txtPId);
             if (prod == null)
                 return RedirectToAction("productList");
 
-            ShoppingCart cart = new ShoppingCart()
+            var IsSuccess = isSuccess;
+
+
+            ShoppingCart hasCart = (_medicalContext.ShoppingCarts.Where(c => c.Product.ProductId == AddToCartvModel.txtPId && c.MemberId == 1)).FirstOrDefault();
+            if (hasCart != null)
             {
-                MemberId = 1,
-                ProductId = AddToCartvModel.txtPId,
-                ProductAmount = AddToCartvModel.txtCount
-            };
+                int beforeAmount = hasCart.ProductAmount;
+                int afterAmount = beforeAmount + AddToCartvModel.txtCount;
 
-            _medicalContext.Add(cart);
-            _medicalContext.SaveChanges();
+                if(afterAmount > prod.Stock)
+                {
+                    ModelState.AddModelError("","數量不可大於庫存");
+                    isSuccess = false;
+                    return Content("失敗");
+                }
+                else
+                {
+                    hasCart.ProductAmount = afterAmount;
+                    _medicalContext.SaveChanges();
+                    return Content("成功");
+                }
+            }
+            else
+            {
+                ShoppingCart cart = new ShoppingCart()
+                {
+                    MemberId = 1,
+                    ProductId = AddToCartvModel.txtPId,
+                    ProductAmount = AddToCartvModel.txtCount
+                };
 
-            return RedirectToAction("productList");
+                _medicalContext.Add(cart);
+                _medicalContext.SaveChanges();
+
+                var a = Json(cart);
+
+                return Content("成功");
+            }
+
+            
         }
 
         public IActionResult CartViewList(int? id)
         {
-            List<ShoppingCart> cartList = _medicalContext.ShoppingCarts.Where(c => c.MemberId == 1).ToList();
+            if (id == null)
+                id = 1;
+
+            List<ShoppingCart> cartList = _medicalContext.ShoppingCarts.Where(c => c.MemberId == id).ToList();
+
+            if (cartList.Count == 0)
+            {
+                return RedirectToAction("productList");
+            }
 
             List<Product> prodList = _medicalContext.Products.ToList();
             List<ProductSpecification> prodspecList = _medicalContext.ProductSpecifications.ToList();
@@ -192,25 +236,40 @@ namespace Medical.Controllers
             foreach (ShoppingCart cart in cartList)
             {
                 CShoppingCartItem item = new CShoppingCartItem();
+                item.MemberId = (int)id;
                 item.cart = cart;
                 item.prod = prodList.FirstOrDefault(p => p.ProductId == cart.ProductId);
                 item.prodspec = prodspecList.FirstOrDefault(ps => ps.ProductId == cart.ProductId);
                 cartForShowList.Add(item);
             }
 
-            return View(cartForShowList);
 
+            return View(cartForShowList);
         }
         [HttpPost]
-        public IActionResult CartViewList(int ShoppingCartId)
+        public IActionResult DeleteCartItem(int ShoppingCartId)
         {
             ShoppingCart cart = _medicalContext.ShoppingCarts.FirstOrDefault(c => c.ShoppingCartId == ShoppingCartId);
 
             _medicalContext.Remove(cart);
             _medicalContext.SaveChanges();
-            return RedirectToAction("CartViewList");
+            return Content("成功");
         }
 
+        [HttpPost]
+        public IActionResult ChangeCartItem(ShoppingCart cart)
+        {
+            ShoppingCart mycart = _medicalContext.ShoppingCarts.FirstOrDefault(mc => mc.ShoppingCartId == cart.ShoppingCartId);
+            mycart.ProductAmount = cart.ProductAmount;
+            _medicalContext.SaveChanges();
+
+            return Content("成功");
+        }
+        public IActionResult GetCoupon(int? memId)
+        {
+            List<CouponDetail> cd = _medicalContext.CouponDetails.Where(cd => cd.MemberId == memId && cd.CouponUsed==false).ToList();
+            return Json(cd);
+        }
 
         public IActionResult CheckViewList(int? id)
         {
@@ -271,6 +330,31 @@ namespace Medical.Controllers
             return View(cOrderforShowViewModel);
         }
 
+        public IActionResult ReceiveCoupon(int? id)
+        {
+            if (id == null)
+                id = 2;
+
+            var cGet = _medicalContext.Coupons.Select(c => new CGetCouponViewModel
+            {
+                MemId = (int)id,
+                coupon = c,
+                couponDetail = c.CouponDetails.FirstOrDefault(cd=>cd.MemberId==id&&cd.CouponId==c.CouponId)
+            });
+
+            return View(cGet);
+        }
+        [HttpPost]
+        public IActionResult ReceiveCoupon(int memberId,int couponId,bool couponUsed)
+        {
+            CouponDetail cd = new CouponDetail();
+            cd.MemberId = memberId;
+            cd.CouponId = couponId;
+            cd.CouponUsed = couponUsed;
+            _medicalContext.Add(cd);
+            _medicalContext.SaveChanges();
+            return RedirectToAction("ReceiveCoupon");
+        }
         //========================= 臨時用=========================
 
         public IActionResult tempList()

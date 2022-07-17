@@ -81,6 +81,8 @@
                 <select id="orderby" style="font-size:16px;font-weight:bold">
                     <option value="價錢(由高到低)">價錢(由高到低)</option>
                     <option value="價錢(由低到高)">價錢(由低到高)</option>
+                    <option value="名稱(由Z到A)">名稱(由Z到A)</option>
+                    <option value="名稱(由A到Z)">名稱(由A到Z)</option>
                 </select>
             </div>
             <br />
@@ -100,7 +102,7 @@
                             <img src="~/images/@cprod.ProductImage" width="140" height="200" class="card-img-top" />
                             <div class="card-body">
                                 <a href="~/Product/ProductDetail?productName=@cprod.Product.ProductName" id="@cprod.ProductId" onclick="detail(event)"> <h5 class="prodName">@Html.DisplayFor(modelItem => cprod.Product.ProductName)</h5> </a>
-                                NT$<span class="SPprice"> @Html.DisplayFor(modelItem => cprod.UnitPrice)</span>
+                                NT$<span class="SPrice"> @Html.DisplayFor(modelItem => cprod.UnitPrice)</span>
                             </div>
                         </div>
                     </div>
@@ -186,12 +188,20 @@
 
 
             $(function (){
-                var asc = function (a, b) {
-                    return parseInt($(a).find(".SPprice").text()) - parseInt($(b).find(".SPrice").text()) ? 1 : -1;
+                var Pasc = function (a, b) {
+                    return parseInt($(a).find(".SPrice").text()) > parseInt($(b).find(".SPrice").text()) ? 1 : -1;
                 }
 
-                var desc = function (a, b) {
-                    return parseInt($(a).find(".SPprice").text()) - parseInt($(b).find(".SPrice").text()) ? -1 : 1;
+                var Pdesc = function (a, b) {
+                    return parseInt($(a).find(".SPrice").text()) > parseInt($(b).find(".SPrice").text()) ? -1 : 1;
+                }
+
+                var Nasc = function (a, b) {
+                    return $(a).find(".prodName").text() > $(b).find(".prodName").text() ? 1 : -1;
+                }
+
+                var Ndesc = function (a, b) {
+                    return $(a).find(".prodName").text() > $(b).find(".prodName").text() ? -1 : 1;
                 }
 
                 function sortBySpan(sortBy) {
@@ -205,13 +215,23 @@
                 switch (option) {
                     case "價錢(由低到高)":
                         console.log("價錢(由低到高)");
-                        sortBySpan(asc);
+                        sortBySpan(Pasc);
                         console.log($(".SPprice").text());
                         break;
                     case "價錢(由高到低)":
                         console.log("價錢(由高到低)");
-                        sortBySpan(desc);
+                        sortBySpan(Pdesc);
                         console.log($(".SPprice").text());
+                        break;
+                    case "名稱(由Z到A)":
+                        console.log("價錢(由高到低)");
+                        sortBySpan(Ndesc);
+                        console.log($(".prodNamerice").text());
+                        break;
+                    case "名稱(由A到Z)":
+                        console.log("價錢(由高到低)");
+                        sortBySpan(Nasc);
+                        console.log($(".prodName").text());
                         break;
                 }
 

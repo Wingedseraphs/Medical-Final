@@ -19,24 +19,24 @@
         </div>
 
         <div class="col-md-6 offset-md-1" style="padding-left: 20px;">
-            <form action="AddToCart" method="post">
+            <form method="post" id="myform">
                 <br>
                 <h3>@Model.prod.ProductName</h3>
 
                 <br>
                 <h5>@Model.prodSpec.UnitPrice.ToString("C0")</h5>
                 <br>
-                <button type="submit" style="width: 90%; background-color: black; color: white;font-size: 20px;" id="btnAddToCart"> 加入購物車</button>
+                <button type="button" style="width: 90%; background-color: black; color: white;font-size: 20px;" id="btnAddToCart"> 加入購物車</button>
 
                 <br>
                 <br>
 
                 <div style="width: 90%; display: flex ; justify-content: space-between;">
-                    <span style="font-weight: bold;font-size: 20px;"> 數量: &nbsp;<input type="number" style="width: 100px;height: 30px;" value="1" name="txtCount"></span>
+                    <span style="font-weight: bold;font-size: 20px;"> 數量: <input id="inputNum" type="number" style="width: 100px;height: 30px;" value="1" name="txtCount" min="1" max="@Model.prod.Stock" oninput="if(value>@Model.prod.Stock)value=@Model.prod.Stock;if(value<1)value=1" required> &nbsp; <span style="font-size:16px">庫存:@Model.prod.Stock</span> </span>
                     <input value="@Model.prod.ProductId" name="txtPid" hidden>
-                    <button style="width: 140px;height: 32px;">直接購買</button>
-
+                    <button class="btn btn-outline-danger" style="width: 120px;height: 32px;">直接購買</button>
                 </div>
+                <div class="mt-1"><span style="font-size:14px">(數量不可超過庫存)</span></div>
             </form>
         </div>
     </div>
@@ -106,19 +106,69 @@
 </div>
 
 @section Scripts{
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     <script>
 
-        let btnAddToCart = document.getElementById("btnAddToCart");
-        console.log(btnAddToCart);
+        let inputNum = $("#inputNum");
+        let myForm = $("#myform");
+        console.log(myForm)
 
-        btnAddToCart.addEventListener("click", function () { alert("成功加入購物車!")});
+
+
+        $("#btnAddToCart").click(() => {
+            $.ajax({
+                url: "@Url.Content("~/Product/AddToCart")",
+                type: 'POST',
+                enctype: "multipart/form-data",
+                data: myForm.serialize(),
+
+
+                success: function (message) {
+                    if (message === "成功") {
+                        let timerInterval
+                        Swal.fire({
+                            icon: 'success',
+                            title: '成功',
+                            html: '已將商品加入至購物車',
+                            timer: 1000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading()
+                                const b = Swal.getHtmlContainer().querySelector('b')
+                                timerInterval = setInterval(() => {
+                                    b.textContent = Swal.getTimerLeft()
+                                }, 100)
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval)
+                            }
+                        }).then((result) => {
+                            /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                console.log('I was closed by the timer')
+                            }
+                        })
+                    }
+                    else
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: '請確認購物車商品總數是否超出庫存!',
+                        })
+               
+                }
+            })
+        });
+
+        //btnAddToCart.addEventListener("click", function () { alert("成功加入購物車!") });
 
 
     </script>
 
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-    
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 }
