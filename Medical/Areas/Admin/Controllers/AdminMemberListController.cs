@@ -20,7 +20,7 @@ namespace Medical.Areas.Admin.Controllers
         //======================================================================
         public IActionResult AdminMemberList(CKeyWordViewModel keyVModel,int? Role)   //管理員帳號登入=>會員清單管理
         {
-            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USE))  //TODO 還需要寫一個getSession(登出)/未驗證身分
+            if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USE))  
             {
                 if (string.IsNullOrEmpty(keyVModel.txtKeyword))
                 {

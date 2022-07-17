@@ -95,25 +95,32 @@ namespace Medical.Controllers
             return View(regVModel);
         }
 
-        //[HttpPost]
-        //public IActionResult Register(CRegisterViewModel vModel)  //Ver.1.0可用
-        //{
-        //    MedicalContext medicalDb = new MedicalContext();
-        //    medicalDb.Members.Add(vModel.member);
-        //    //Member m = medicalDb.Members.Where(n => n.Gender.GenderId == vModel.GenderId).FirstOrDefault();
-
-        //    medicalDb.SaveChanges();
-        //    return RedirectToAction("Index", "Home");
-        //}
         [HttpPost]
         public IActionResult Register(CRegisterViewModel vModel)
         {
+            if (vModel != null)
+            {
 
-            _context.Members.Add(vModel.member);
+                sendMail();
 
-            _context.SaveChanges();
+                _context.Members.Add(vModel.member);
+                _context.SaveChanges();
+            }
             return RedirectToAction("Index", "Home");
         }
+
+
+        private void sendMail()
+        {
+            string mailContent = String.Empty;
+            mailContent += "<h1>請確認您的信箱</h1>";
+            mailContent += "此信件由系統自動發送";
+       
+        }
+
+
+
+
 
         //public IActionResult Delete(int? id)
         //{
@@ -128,40 +135,6 @@ namespace Medical.Controllers
         //}
 
 
-        //public IActionResult Edit(int? id)
-        //{
-        //    MedicalContext db = new MedicalContext();
-        //    Member mem = db.Members.FirstOrDefault(c => c.MemberId == id);
-        //    if (mem == null)
-        //        return RedirectToAction("Index", "Home");
-        //    return View(mem);
-        //}
-        //[HttpPost]
-        //public IActionResult Edit(Member p)
-        //{
-        //    MedicalContext db = new MedicalContext();
-        //    Member mem = db.Members.FirstOrDefault(c => c.MemberId == p.MemberId);
-        //    if (mem != null)
-        //    { 
-        //        mem.IdentityId = p.IdentityId;   
-        //        mem.Password = p.Password;
-        //        mem.MemberName = p.MemberName;
-        //        mem.BirthDay = p.BirthDay;
-        //        mem.GenderId = p.GenderId;
-        //        mem.BloodType = p.BloodType;
-        //        mem.Weight = p.Weight;
-        //        mem.IcCardNo = p.IcCardNo;
-        //        mem.Phone = p.Phone;
-        //        mem.Email = p.Email; 
-        //        mem.Role = p.Role;
-        //        mem.CityId = p.CityId;
-        //        mem.Address = p.Address;
-
-
-        //        db.SaveChanges();
-        //    }
-        //    return RedirectToAction("AdminLoginMemberList", "Login");
-        //}
         public IActionResult Logout()
         {
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USE))
