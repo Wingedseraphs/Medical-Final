@@ -10,6 +10,7 @@ namespace Medical.ViewModel
 {
     public class CRegisterViewModel
     {
+        public static string gmail { get; set; }
         public List<Member> mem { get; set; }
         public List<RoleType> roleTypes { get; set; }
         public List<Gender> MemGender { get; set; }

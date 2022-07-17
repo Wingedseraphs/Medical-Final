@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -147,6 +149,52 @@ namespace Medical.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public IActionResult ForgetPassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult ForgetPassword(string email)
+        {
+            Member x =_context.Members.FirstOrDefault(q => q.Email.Contains(email));
+            if (x != null)
+            {
+                CRegisterViewModel.gmail = email;
+                string account = "giraffegtest@gmail.com";
+                string password = "ahhpp5000";    
+                SmtpClient client = new SmtpClient();
+                client.Host = "smtp.gmail.com"; //設定google server
+                client.Port = 587;              //google port
+                client.Credentials = new NetworkCredential(account, password);  //寄信人
+                client.EnableSsl = true;           //是否啟用SSL驗證  =>SSL憑證是在網頁伺服器(主機)與網頁瀏覽器(客戶端)之間建立一個密碼連結的標準規範
 
+                MailMessage mail = new MailMessage();
+                mail.From = new MailAddress(account);
+                mail.To.Add(email);
+                mail.Subject = "KitchenGo";
+                mail.SubjectEncoding = System.Text.Encoding.UTF8;
+                mail.IsBodyHtml = true;
+                mail.Body = "<h1>親愛的會員您好:</h1><br><h2>如欲重新設定密碼<a href='https://localhost:44302/Login/ResetPassword'>請點我</a></h2>";
+                mail.BodyEncoding = System.Text.Encoding.UTF8;
+                try
+                {
+                    client.Send(mail);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
+                finally
+                {
+                    mail.Dispose();
+                    client.Dispose();//釋放資源
+                }
+                return Content("<script>alert('信件已送出!請到註冊的信箱查看');window.location.href='https://localhost:44302/'</script>", "text/html", System.Text.Encoding.UTF8);
             }
+            else
+                return Content("<script>alert('您不是會員!請先加入會員!');window.location.href='https://localhost:44302/'</script>", "text/html", System.Text.Encoding.UTF8);
+
+        }
+
+    }
 }
