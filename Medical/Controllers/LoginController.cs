@@ -12,10 +12,13 @@ namespace Medical.Controllers
 {
     public class LoginController : Controller
     {
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
+        private readonly MedicalContext _context;
+
+        public LoginController(MedicalContext context)  //注入
+        {
+            _context = context;
+        }
+        //======================================================================
         //public IActionResult AdminLoginMemberList()   //管理員帳號登入=>會員清單管理
         //{
         //    if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USE))  //TODO 還需要寫一個getSession(登出)/未驗證身分
@@ -82,8 +85,14 @@ namespace Medical.Controllers
 
         public IActionResult Register()
         {
-
-            return View();
+            CRegisterViewModel regVModel = new CRegisterViewModel()
+            {
+                mem = _context.Members.ToList(),
+                roleTypes = _context.RoleTypes.ToList(),
+                MemCity=_context.Cities.ToList(),
+                MemGender=_context.Genders.ToList()
+            };
+            return View(regVModel);
         }
 
         //[HttpPost]
@@ -99,30 +108,10 @@ namespace Medical.Controllers
         [HttpPost]
         public IActionResult Register(CRegisterViewModel vModel)
         {
-            MedicalContext medicalDb = new MedicalContext();
-            medicalDb.Members.Add(vModel.member);
-            //================================
 
-            //MedicalContext medicalDb = new MedicalContext();
-            ////IEnumerable<CRegisterViewModel> vModel = null;
-            //var q = from c in medicalDb.Members
-            //        join m in medicalDb.Cities on c.CityId equals m.CityId
-            //        join n in medicalDb.Genders on c.GenderId equals n.GenderId
-            //        select new CRegisterViewModel
-            //        {
-            //            IdentityId = c.IdentityId,
-            //            Password = c.Password,
-            //            MemberName = c.MemberName,
-            //            BirthDay = c.BirthDay,
-            //            GenderId = n.Gender1,
-            //            Email = c.Email,
-            //            Phone = c.Phone,
-            //            Role = c.Role,
-            //            CityId = c.CityId,
-            //            Address = c.Address
-            //        };
-            //================================
-            medicalDb.SaveChanges();
+            _context.Members.Add(vModel.member);
+
+            _context.SaveChanges();
             return RedirectToAction("Index", "Home");
         }
 

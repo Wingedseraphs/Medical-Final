@@ -8,6 +8,7 @@ namespace Medical.ViewModels
     public class CKeyWordViewModel
     {
         public string txtKeyword { get; set; }
+
     }
 
                

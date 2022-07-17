@@ -1,7 +1,6 @@
-﻿@model IEnumerable<Medical.Models.Member>
-@*管理者LayOut*@
+﻿@model Medical.ViewModel.CRegisterViewModel
 @{
-    ViewData["Title"] = "AdminLoginMemberList";
+    ViewData["Title"] = "AdminMemberList";
     Layout = "~/Areas/Admin/Admin_Layout.cshtml";
 }
 
@@ -16,16 +15,46 @@
         }
 
         <a>權限篩選</a>
-        <select id="roleSelect">
 
-            <option>選擇權限</option>
-            <option id="role1">權限1</option>
-            <option id="role2">權限2</option>
-            <option id="role3">權限3</option>
 
-        </select>
+        @using (Html.BeginForm())
+        {
+            <div class="form-group">
+                <select asp-for="Role">
+                    <option>權限篩選</option>
+                    @foreach (var item in Model.roleTypes)
+                    {
+                        <option value="@item.Role">@item.RoleName</option>
+                    }
+                </select>
+                @*<input type="submit" value="篩選" class="btn btn-primary" />*@
+            </div>
+        }
     </div>
 </div>
+@*<div class="row">
+        <div class="col-md-3">
+            @foreach (var item in Model.roleTypes)
+            {
+                <a>1</a>
+                <p>@Html.ActionLink(item.RoleName, "AdminMemberList", new { Rolegg = item.Role })</p>
+            }
+        </div>
+    </div>*@
+
+
+<!--<form asp-action="AdminMemberList">
+    <div class="form-group" hidden="hidden">-->
+@*設定隱藏並給預設身分1後台修改*@
+<!--<label asp-for="Role" class="control-label"></label>
+        <input asp-for="Role" class="form-control mb-2" value="1" />
+        <span asp-validation-for="Role" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="測試" class="btn btn-primary" />
+    </div>
+</form>-->
+
 
 <table class="table">
     <thead>
@@ -34,49 +63,37 @@
                 序號
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IdentityId)
+                使用者ID
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Password)
+                密碼
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MemberName)
+                姓名
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.BirthDay)
+                生日
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.GenderId)
-            </th>
-            @*<th>
-                    @Html.DisplayNameFor(model => model.BloodType)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Weight)
-                </th>*@
-            <th>
-                @Html.DisplayNameFor(model => model.IcCardNo)
+                性別
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Email)
+                健保卡
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Phone)
-            </th>
-            @*<th>
-                    @Html.DisplayNameFor(model => model.OdRight)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.OsLeft)
-                </th>*@
-            <th>
-                @Html.DisplayNameFor(model => model.Role)
+                信箱
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CityId)
+                電話
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Address)
+                權限
+            </th>
+            <th>
+                城市
+            </th>
+            <th>
+                地址
             </th>
             <th></th>
         </tr>
@@ -84,7 +101,7 @@
     <tbody>
         @{
             int count = 0;
-            @foreach (var item in Model)
+            @foreach (var item in Model.mem)
             {
                 count++;
                 <tr>
@@ -106,12 +123,6 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.GenderId)
                     </td>
-                    @*<td>
-                            @Html.DisplayFor(modelItem => item.BloodType)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Weight)
-                        </td>*@
                     <td>
                         @Html.DisplayFor(modelItem => item.IcCardNo)
                     </td>
@@ -121,12 +132,6 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Phone)
                     </td>
-                    @*<td>
-                            @Html.DisplayFor(modelItem => item.OdRight)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.OsLeft)
-                        </td>*@
                     <td>
                         @Html.DisplayFor(modelItem => item.Role)
                     </td>
@@ -147,25 +152,3 @@
 </table>
 <br />
 <br />
-<br />
-<br />
-<br />
-@section Scripts{
-    <script>
-        const roleSelect = document.querySelector("#roleSelect");
-
-        roleSelect.addEventListener('change', () => {
-            alert($('#roleSelect').val());
-            LoadTable();
-
-        });
-
-        async function LoadTable() {
-            const selectedRoleIndex = roleSelect.selectedIndex;
-            console.log(selectedRoleIndex);  //index 0 1 2 3
-            const selectedRole = roleSelect.options[roleSelect.selectedIndex].value;
-            console.log(selectedRole);   //權限1.權限2..
-
-        };
-    </script>
-}

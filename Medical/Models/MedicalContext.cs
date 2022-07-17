@@ -47,6 +47,7 @@ namespace Medical.Models
         public virtual DbSet<RatingType> RatingTypes { get; set; }
         public virtual DbSet<Reserve> Reserves { get; set; }
         public virtual DbSet<Review> Reviews { get; set; }
+        public virtual DbSet<RoleType> RoleTypes { get; set; }
         public virtual DbSet<ShipType> ShipTypes { get; set; }
         public virtual DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public virtual DbSet<Source> Sources { get; set; }
@@ -58,7 +59,7 @@ namespace Medical.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Medical;Integrated Security=True");
             }
         }
@@ -729,6 +730,15 @@ namespace Medical.Models
                     .WithMany(p => p.Reviews)
                     .HasForeignKey(d => d.RatingTypeId)
                     .HasConstraintName("FK_Review_RatingType");
+            });
+
+            modelBuilder.Entity<RoleType>(entity =>
+            {
+                entity.HasKey(e => e.Role);
+
+                entity.ToTable("RoleType");
+
+                entity.Property(e => e.RoleName).HasMaxLength(50);
             });
 
             modelBuilder.Entity<ShipType>(entity =>

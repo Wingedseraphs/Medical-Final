@@ -10,6 +10,10 @@ namespace Medical.ViewModel
 {
     public class CRegisterViewModel
     {
+        public List<Member> mem { get; set; }
+        public List<RoleType> roleTypes { get; set; }
+        public List<Gender> MemGender { get; set; }
+        public List<City> MemCity { get; set; }
         public CRegisterViewModel()
         {
             _member = new Member();
@@ -58,27 +62,12 @@ namespace Medical.ViewModel
             get { return _member.BirthDay; }
             set { _member.BirthDay = value; }
         }
-        //[DisplayName("性別")]
-        //public int? GenderId
-        //{
-        //    get { return _member.GenderId; }
-        //    set { _member.GenderId = value; }
-        //}
-
         [DisplayName("性別")]
-        public string GenderId
+        public int? GenderId
         {
-            get
-            {
-                return _gender.Gender1;
-            }
-            set
-            {
-                _gender.Gender1 = value;
-            }
+            get { return _member.GenderId; }
+            set { _member.GenderId = value; }
         }
-
-
 
         [DisplayName("郵件信箱")]
         public string Email
