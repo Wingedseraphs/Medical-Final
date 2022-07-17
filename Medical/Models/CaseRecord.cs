@@ -11,7 +11,6 @@ namespace Medical.Models
         public int MemberId { get; set; }
         public string DiagnosticRecord { get; set; }
         public int ReserveId { get; set; }
-        public string SyndromeDescription { get; set; }
         public int? TreatmentDetailId { get; set; }
 
         public virtual Member Member { get; set; }

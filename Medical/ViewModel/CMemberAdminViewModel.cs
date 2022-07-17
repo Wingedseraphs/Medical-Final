@@ -76,16 +76,7 @@ namespace Medical.ViewModel
             get { return _Member.Phone; }
             set { _Member.Phone = value; }
         }
-        public int? OdRight
-        {
-            get { return _Member.OdRight; }
-            set { _Member.OdRight = value; }
-        }
-        public int? OsLeft
-        {
-            get { return _Member.OsLeft; }
-            set { _Member.OsLeft = value; }
-        }
+        
         public int? Role
         {
             get { return _Member.Role; }

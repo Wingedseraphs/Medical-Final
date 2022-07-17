@@ -21,8 +21,10 @@ namespace Medical.Models
         public int? OrderStateId { get; set; }
         public int? PayTypeId { get; set; }
         public int? ShipTypeId { get; set; }
+        public int? CouponDetalId { get; set; }
 
         public virtual City City { get; set; }
+        public virtual CouponDetail CouponDetal { get; set; }
         public virtual Member Member { get; set; }
         public virtual Orderstate OrderState { get; set; }
         public virtual Paytype PayType { get; set; }

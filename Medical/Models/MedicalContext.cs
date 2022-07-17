@@ -26,8 +26,9 @@ namespace Medical.Models
         public virtual DbSet<City> Cities { get; set; }
         public virtual DbSet<ClinicDetail> ClinicDetails { get; set; }
         public virtual DbSet<ClinicRoom> ClinicRooms { get; set; }
+        public virtual DbSet<Coupon> Coupons { get; set; }
+        public virtual DbSet<CouponDetail> CouponDetails { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
-        public virtual DbSet<DepartmentCategory> DepartmentCategories { get; set; }
         public virtual DbSet<Doctor> Doctors { get; set; }
         public virtual DbSet<Experience> Experiences { get; set; }
         public virtual DbSet<Gender> Genders { get; set; }
@@ -37,16 +38,19 @@ namespace Medical.Models
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<Orderstate> Orderstates { get; set; }
+        public virtual DbSet<OtherProductImage> OtherProductImages { get; set; }
         public virtual DbSet<Paytype> Paytypes { get; set; }
         public virtual DbSet<Period> Periods { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductBrand> ProductBrands { get; set; }
         public virtual DbSet<ProductCategory> ProductCategories { get; set; }
         public virtual DbSet<ProductSpecification> ProductSpecifications { get; set; }
+        public virtual DbSet<Question> Questions { get; set; }
         public virtual DbSet<RatingDoctor> RatingDoctors { get; set; }
         public virtual DbSet<RatingType> RatingTypes { get; set; }
         public virtual DbSet<Reserve> Reserves { get; set; }
         public virtual DbSet<Review> Reviews { get; set; }
+        public virtual DbSet<RoleType> RoleTypes { get; set; }
         public virtual DbSet<ShipType> ShipTypes { get; set; }
         public virtual DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public virtual DbSet<Source> Sources { get; set; }
@@ -58,7 +62,7 @@ namespace Medical.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-//#warning To protect /*potentially*/ sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Medical;Integrated Security=True");
             }
         }
@@ -262,9 +266,31 @@ namespace Medical.Models
 
                 entity.Property(e => e.RoomId).HasColumnName("RoomID");
 
-                entity.Property(e => e.Number).HasColumnName("number");
-
                 entity.Property(e => e.RoomName).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Coupon>(entity =>
+            {
+                entity.ToTable("Coupon");
+
+                entity.Property(e => e.CouponId).HasColumnName("CouponID");
+            });
+
+            modelBuilder.Entity<CouponDetail>(entity =>
+            {
+                entity.ToTable("CouponDetail");
+
+                entity.Property(e => e.CouponDetailId).HasColumnName("CouponDetailID");
+
+                entity.Property(e => e.CouponId).HasColumnName("CouponID");
+
+                entity.Property(e => e.MemberId).HasColumnName("MemberID");
+
+                entity.HasOne(d => d.Coupon)
+                    .WithMany(p => p.CouponDetails)
+                    .HasForeignKey(d => d.CouponId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CouponDetail_Coupon");
             });
 
             modelBuilder.Entity<Department>(entity =>
@@ -273,28 +299,7 @@ namespace Medical.Models
 
                 entity.Property(e => e.DepartmentId).HasColumnName("DepartmentID");
 
-                entity.Property(e => e.DeptCategoryId).HasColumnName("DeptCategoryID");
-
                 entity.Property(e => e.DeptName).HasMaxLength(50);
-
-                entity.HasOne(d => d.DeptCategory)
-                    .WithMany(p => p.Departments)
-                    .HasForeignKey(d => d.DeptCategoryId)
-                    .HasConstraintName("FK_Department_DepartmentCategory");
-            });
-
-            modelBuilder.Entity<DepartmentCategory>(entity =>
-            {
-                entity.HasKey(e => e.DeptCategoryId)
-                    .HasName("PK__Departme__F861972B3DAD5F4B");
-
-                entity.ToTable("DepartmentCategory");
-
-                entity.Property(e => e.DeptCategoryId).HasColumnName("DeptCategoryID");
-
-                entity.Property(e => e.DeptCategoryName)
-                    .HasMaxLength(50)
-                    .IsFixedLength(true);
             });
 
             modelBuilder.Entity<Doctor>(entity =>
@@ -385,10 +390,6 @@ namespace Medical.Models
 
                 entity.Property(e => e.MemberName).HasMaxLength(50);
 
-                entity.Property(e => e.OdRight).HasColumnName("OD-Right");
-
-                entity.Property(e => e.OsLeft).HasColumnName("OS-Left");
-
                 entity.Property(e => e.Password).HasMaxLength(50);
 
                 entity.Property(e => e.Phone).HasMaxLength(50);
@@ -402,6 +403,11 @@ namespace Medical.Models
                     .WithMany(p => p.Members)
                     .HasForeignKey(d => d.GenderId)
                     .HasConstraintName("FK_Member_Gender");
+
+                entity.HasOne(d => d.RoleNavigation)
+                    .WithMany(p => p.Members)
+                    .HasForeignKey(d => d.Role)
+                    .HasConstraintName("FK_Member_RoleType");
             });
 
             modelBuilder.Entity<News>(entity =>
@@ -444,6 +450,8 @@ namespace Medical.Models
 
                 entity.Property(e => e.CityId).HasColumnName("CityID");
 
+                entity.Property(e => e.CouponDetalId).HasColumnName("CouponDetalID");
+
                 entity.Property(e => e.MemberId).HasColumnName("MemberID");
 
                 entity.Property(e => e.OrderDate).HasMaxLength(50);
@@ -460,6 +468,11 @@ namespace Medical.Models
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.CityId)
                     .HasConstraintName("FK_Order_City");
+
+                entity.HasOne(d => d.CouponDetal)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.CouponDetalId)
+                    .HasConstraintName("FK_Order_CouponDetail");
 
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.Orders)
@@ -517,6 +530,26 @@ namespace Medical.Models
                     .HasColumnName("OrderState");
             });
 
+            modelBuilder.Entity<OtherProductImage>(entity =>
+            {
+                entity.ToTable("OtherProductImage");
+
+                entity.Property(e => e.OtherProductImageId).HasColumnName("OtherProductImageID");
+
+                entity.Property(e => e.OtherProductImage1)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("OtherProductImage");
+
+                entity.Property(e => e.ProductId).HasColumnName("ProductID");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.OtherProductImages)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OtherProductImage_Product");
+            });
+
             modelBuilder.Entity<Paytype>(entity =>
             {
                 entity.ToTable("Paytype");
@@ -544,6 +577,8 @@ namespace Medical.Models
                 entity.ToTable("Product");
 
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
+
+                entity.Property(e => e.Cost).HasColumnName("cost");
 
                 entity.Property(e => e.Discontinued).HasColumnName("discontinued");
 
@@ -625,6 +660,17 @@ namespace Medical.Models
                     .HasConstraintName("FK_ProductSpecification_Product");
             });
 
+            modelBuilder.Entity<Question>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("Question");
+
+                entity.Property(e => e.QuestionId)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("QuestionID");
+            });
+
             modelBuilder.Entity<RatingDoctor>(entity =>
             {
                 entity.ToTable("RatingDoctor");
@@ -675,10 +721,6 @@ namespace Medical.Models
 
                 entity.Property(e => e.SequenceNumber).HasColumnName("sequence_number");
 
-                entity.Property(e => e.SourceId).HasColumnName("SourceID");
-
-                entity.Property(e => e.StateId).HasColumnName("StateID");
-
                 entity.HasOne(d => d.ClinicDetail)
                     .WithMany(p => p.Reserves)
                     .HasForeignKey(d => d.ClinicDetailId)
@@ -691,14 +733,14 @@ namespace Medical.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Reserve_Member");
 
-                entity.HasOne(d => d.Source)
+                entity.HasOne(d => d.SourceNavigation)
                     .WithMany(p => p.Reserves)
-                    .HasForeignKey(d => d.SourceId)
+                    .HasForeignKey(d => d.Source)
                     .HasConstraintName("FK_Reserve_Source");
 
-                entity.HasOne(d => d.State)
+                entity.HasOne(d => d.StateNavigation)
                     .WithMany(p => p.Reserves)
-                    .HasForeignKey(d => d.StateId)
+                    .HasForeignKey(d => d.State)
                     .HasConstraintName("FK_Reserve_State");
             });
 
@@ -731,6 +773,15 @@ namespace Medical.Models
                     .WithMany(p => p.Reviews)
                     .HasForeignKey(d => d.RatingTypeId)
                     .HasConstraintName("FK_Review_RatingType");
+            });
+
+            modelBuilder.Entity<RoleType>(entity =>
+            {
+                entity.HasKey(e => e.Role);
+
+                entity.ToTable("RoleType");
+
+                entity.Property(e => e.RoleName).HasMaxLength(50);
             });
 
             modelBuilder.Entity<ShipType>(entity =>
@@ -817,16 +868,9 @@ namespace Medical.Models
 
                 entity.Property(e => e.TreatmentDetailId).HasColumnName("TreatmentDetailID");
 
-                entity.Property(e => e.DepartmentId).HasColumnName("DepartmentID");
-
                 entity.Property(e => e.TreatmentDetail1)
                     .HasMaxLength(50)
                     .HasColumnName("TreatmentDetail");
-
-                entity.HasOne(d => d.Department)
-                    .WithMany(p => p.TreatmentDetails)
-                    .HasForeignKey(d => d.DepartmentId)
-                    .HasConstraintName("FK_TreatmentDetail_Department");
             });
 
             OnModelCreatingPartial(modelBuilder);

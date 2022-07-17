@@ -89,95 +89,95 @@ namespace Medical.Controllers
             return RedirectToAction("Index");
 
         }
-        public IActionResult EditDetail(int? id)           //修改醫生資料
-        {
-            CDoctorDetailViewModel prod = new CDoctorDetailViewModel();
-            prod.doctor = _db.Doctors.FirstOrDefault(t => t.DoctorId == id);
-            Department dep = _db.Departments.FirstOrDefault(t => t.DepartmentId == prod.doctor.DepartmentId);
-            DepartmentCategory depC = null;
-            if (dep != null)
-            {
-                depC = _db.DepartmentCategories.FirstOrDefault(t => t.DeptCategoryId == dep.DeptCategoryId);
-                prod.department = dep;
-            }
-            Experience exp = _db.Experiences.FirstOrDefault(t => t.DoctorId == prod.doctor.DoctorId);
-            if (depC != null)
-                prod.departmentCategory = depC;
-            if (exp != null)
-                prod.experience = exp;
-            if (prod == null)
-                return RedirectToAction("Index");
-            return View(prod);
-        }
+        //public IActionResult EditDetail(int? id)           //修改醫生資料
+        //{
+        //    //CDoctorDetailViewModel prod = new CDoctorDetailViewModel();
+        //    //prod.doctor = _db.Doctors.FirstOrDefault(t => t.DoctorId == id);
+        //    //Department dep = _db.Departments.FirstOrDefault(t => t.DepartmentId == prod.doctor.DepartmentId);
+        //    //DepartmentCategory depC = null;
+        //    //if (dep != null)
+        //    //{
+        //    //    depC = _db.DepartmentCategories.FirstOrDefault(t => t.DeptCategoryId == dep.DeptCategoryId);
+        //    //    prod.department = dep;
+        //    //}
+        //    //Experience exp = _db.Experiences.FirstOrDefault(t => t.DoctorId == prod.doctor.DoctorId);
+        //    //if (depC != null)
+        //    //    prod.departmentCategory = depC;
+        //    //if (exp != null)
+        //    //    prod.experience = exp;
+        //    //if (prod == null)
+        //    //    return RedirectToAction("Index");
+        //    //return View(prod);
+        //}
         [HttpPost]
         public IActionResult EditDetail(CDoctorDetailViewModel p) //修改醫生資料
         {
-            Doctor doc = _db.Doctors.FirstOrDefault(t => t.DoctorId == p.DoctorID);
-            Department dep = _db.Departments.FirstOrDefault(s => s.DepartmentId == p.doctor.DepartmentId);
-            DepartmentCategory depC = _db.DepartmentCategories.FirstOrDefault(u => u.DeptCategoryId == p.departmentCategory.DeptCategoryId);
-            Experience exp = _db.Experiences.FirstOrDefault(v => v.DoctorId == p.DoctorID);
-            Member mem = _db.Members.FirstOrDefault(x => x.MemberId == doc.MemberId);
-            if (doc != null)
-            {
-                if (p.photo != null)
-                {
-                    string pName = Guid.NewGuid().ToString() + ".jpg";
-                    p.photo.CopyTo(new FileStream((_enviroment.WebRootPath + "/images/" + pName), FileMode.Create));
-                    doc.PicturePath = pName;
-                }
-                doc.DoctorName = p.DoctorName;
-                mem.MemberName = p.DoctorName;
-                doc.DepartmentId = p.DepartmentID;
-                doc.Education = p.Education;
-                doc.JobTitle = p.JobTitle;
-            }
-            if (p.DeptCategoryName != null && depC != null)
-            {
-                if (_db.DepartmentCategories.Where(t => t.DeptCategoryName.Contains(p.DeptCategoryName)) != null)
-                {
-                    depC = _db.DepartmentCategories.FirstOrDefault(t => t.DeptCategoryName == p.DeptCategoryName);
-                    dep.DeptCategoryId = depC.DeptCategoryId;   //需要修改
-                }
-                else
-                    _db.DepartmentCategories.Add(p.departmentCategory);
-            }
-            if (p.DeptCategoryName != null && depC == null)
-            {
-                _db.DepartmentCategories.Add(p.departmentCategory);
-                _db.SaveChanges();
-                depC = _db.DepartmentCategories.FirstOrDefault(s => s.DeptCategoryName == p.DeptCategoryName);
-            }
-            if (p.DepName != null && dep != null)
-            {
-                if (_db.Departments.Where(t => t.DeptName.Contains(p.DepName)) != null)
-                {
-                    dep = _db.Departments.FirstOrDefault(t => t.DeptName == p.DepName);
-                    doc.DepartmentId = dep.DepartmentId;
-                }
-                else
-                    _db.Departments.Add(p.department);
-            }
-            if (p.DepName != null && dep == null)
-            {
-                p.department.DeptCategoryId = depC.DeptCategoryId;
-                _db.Departments.Add(p.department);
-                _db.SaveChanges();
-                dep = _db.Departments.FirstOrDefault(s => s.DeptName == p.DepName);
-                doc.DepartmentId = dep.DepartmentId;
-                dep.DeptCategoryId = depC.DeptCategoryId;
-            }
+            //Doctor doc = _db.Doctors.FirstOrDefault(t => t.DoctorId == p.DoctorID);
+            //Department dep = _db.Departments.FirstOrDefault(s => s.DepartmentId == p.doctor.DepartmentId);
+            //DepartmentCategory depC = _db.DepartmentCategories.FirstOrDefault(u => u.DeptCategoryId == p.departmentCategory.DeptCategoryId);
+            //Experience exp = _db.Experiences.FirstOrDefault(v => v.DoctorId == p.DoctorID);
+            //Member mem = _db.Members.FirstOrDefault(x => x.MemberId == doc.MemberId);
+            //if (doc != null)
+            //{
+            //    if (p.photo != null)
+            //    {
+            //        string pName = Guid.NewGuid().ToString() + ".jpg";
+            //        p.photo.CopyTo(new FileStream((_enviroment.WebRootPath + "/images/" + pName), FileMode.Create));
+            //        doc.PicturePath = pName;
+            //    }
+            //    doc.DoctorName = p.DoctorName;
+            //    mem.MemberName = p.DoctorName;
+            //    doc.DepartmentId = p.DepartmentID;
+            //    doc.Education = p.Education;
+            //    doc.JobTitle = p.JobTitle;
+            //}
+            //if (p.DeptCategoryName != null && depC != null)
+            //{
+            //    if (_db.DepartmentCategories.Where(t => t.DeptCategoryName.Contains(p.DeptCategoryName)) != null)
+            //    {
+            //        depC = _db.DepartmentCategories.FirstOrDefault(t => t.DeptCategoryName == p.DeptCategoryName);
+            //        dep.DeptCategoryId = depC.DeptCategoryId;   //需要修改
+            //    }
+            //    else
+            //        _db.DepartmentCategories.Add(p.departmentCategory);
+            //}
+            //if (p.DeptCategoryName != null && depC == null)
+            //{
+            //    _db.DepartmentCategories.Add(p.departmentCategory);
+            //    _db.SaveChanges();
+            //    depC = _db.DepartmentCategories.FirstOrDefault(s => s.DeptCategoryName == p.DeptCategoryName);
+            //}
+            //if (p.DepName != null && dep != null)
+            //{
+            //    if (_db.Departments.Where(t => t.DeptName.Contains(p.DepName)) != null)
+            //    {
+            //        dep = _db.Departments.FirstOrDefault(t => t.DeptName == p.DepName);
+            //        doc.DepartmentId = dep.DepartmentId;
+            //    }
+            //    else
+            //        _db.Departments.Add(p.department);
+            //}
+            //if (p.DepName != null && dep == null)
+            //{
+            //    p.department.DeptCategoryId = depC.DeptCategoryId;
+            //    _db.Departments.Add(p.department);
+            //    _db.SaveChanges();
+            //    dep = _db.Departments.FirstOrDefault(s => s.DeptName == p.DepName);
+            //    doc.DepartmentId = dep.DepartmentId;
+            //    dep.DeptCategoryId = depC.DeptCategoryId;
+            //}
 
-            if (exp != null && exp.Experience1 != p.Experience)
-            {
-                exp.Experience1 = p.Experience;
-            }
-            if (p.Experience != null && exp == null)
-            {
-                p.experience.DoctorId = p.doctor.DoctorId;
-                _db.Experiences.Add(p.experience);
-            }
+            //if (exp != null && exp.Experience1 != p.Experience)
+            //{
+            //    exp.Experience1 = p.Experience;
+            //}
+            //if (p.Experience != null && exp == null)
+            //{
+            //    p.experience.DoctorId = p.doctor.DoctorId;
+            //    _db.Experiences.Add(p.experience);
+            //}
 
-            _db.SaveChanges();
+            //_db.SaveChanges();
             return RedirectToAction("Index");
 
         }
@@ -188,6 +188,7 @@ namespace Medical.Controllers
             //{
             //    return RedirectToAction("Index");
             //}
+            
             IEnumerable<Doctor> datas = null;
             if (string.IsNullOrEmpty(vModel.txtKeyword))
             {
@@ -202,37 +203,45 @@ namespace Medical.Controllers
             }
             return View(datas);
         }
-        public IActionResult Details(int? id)    //醫生詳細資料
-        {
-            if (id == null)
-            {
-                return RedirectToAction("Index");
-            }
-            CDoctorDetailViewModel prod = new CDoctorDetailViewModel();
-            Doctor DD = _db.Doctors.FirstOrDefault(t => t.DoctorId == id);
-            Experience exp = _db.Experiences.FirstOrDefault(t => t.DoctorId == id);
-            prod.doctor = DD;
-            if (DD.DepartmentId != null)
-                prod.department = _db.Departments.FirstOrDefault(t => t.DepartmentId == prod.doctor.DepartmentId);
-            if (exp != null)
-                prod.experience = _db.Experiences.FirstOrDefault(t => t.DoctorId == prod.doctor.DoctorId);
-            if (DD.DepartmentId != null)
-                prod.departmentCategory = _db.DepartmentCategories.FirstOrDefault(t => t.DeptCategoryId == prod.department.DeptCategoryId);
+        //public IActionResult Details(int? id)    //醫生詳細資料
+        //{
+        //    if (id == null)
+        //    {
+        //        return RedirectToAction("Index");
+        //    }
+        //    CDoctorDetailViewModel prod = new CDoctorDetailViewModel();
+        //    Doctor DD = _db.Doctors.FirstOrDefault(t => t.DoctorId == id);
+        //    Experience exp = _db.Experiences.FirstOrDefault(t => t.DoctorId == id);
+        //    prod.doctor = DD;
+        //    if (DD.DepartmentId != null)
+        //        prod.department = _db.Departments.FirstOrDefault(t => t.DepartmentId == prod.doctor.DepartmentId);
+        //    if (exp != null)
+        //        prod.experience = _db.Experiences.FirstOrDefault(t => t.DoctorId == prod.doctor.DoctorId);
+        //    if (DD.DepartmentId != null)
+        //        prod.departmentCategory = _db.DepartmentCategories.FirstOrDefault(t => t.DeptCategoryId == prod.department.DeptCategoryId);
 
-            if (prod == null)
-                return RedirectToAction("Index");
-            return View(prod);
-        }
+        //    if (prod == null)
+        //        return RedirectToAction("Index");
+        //    return View(prod);
+        //}
 
-        public IActionResult RatingDoctorList(int id)   
+
+
+        //==========冠名==========
+        //瀏覽醫生評論
+        //id寫死
+        public IActionResult RatingDoctorpartail(int id)
         {
-            var result = _db.RatingDoctors.Where(a => a.DoctorId == id)
+            ViewBag.name = _db.RatingDoctors.Where(a => a.DoctorId == id).Select(a => a.Doctor.DoctorName).FirstOrDefault();
+            ViewBag.count = _db.RatingDoctors.Where(a => a.DoctorId == id).Where(a => a.Shade == false).Select(a=>a.Rating).Count();
+
+            var result = _db.RatingDoctors.Where(a => a.DoctorId == id).Where(a => a.Shade == false)
                 .Include(a => a.Doctor)
                 .Include(a => a.RatingType)
                 .ToList();
-
-            return View(result);
+            return PartialView(result);
         }
+
 
     }
 }

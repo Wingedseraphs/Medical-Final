@@ -5,9 +5,16 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>createReview</h1>
-
-<h4>AddReviewViewModel</h4>
+<!-- Hero Start -->
+<div class="container-fluid bg-primary py-5 hero-header mb-5">
+    <div class="row py-3">
+        <div class="col-12 text-center">
+            <h3 class="display-3 text-white animated zoomIn">產品評論</h3>
+        </div>
+    </div>
+</div>
+<!-- Hero End -->
+<hr />
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -38,7 +45,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="OrderDetailList">回到訂單</a>
 </div>
 
 @section Scripts {
@@ -49,4 +56,4 @@
 
 
     </script>
- }
+}
