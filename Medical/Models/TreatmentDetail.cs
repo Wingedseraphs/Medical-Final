@@ -15,9 +15,7 @@ namespace Medical.Models
 
         public int TreatmentDetailId { get; set; }
         public string TreatmentDetail1 { get; set; }
-        public int? DepartmentId { get; set; }
 
-        public virtual Department Department { get; set; }
         public virtual ICollection<CaseRecord> CaseRecords { get; set; }
         public virtual ICollection<Treatment> Treatments { get; set; }
     }

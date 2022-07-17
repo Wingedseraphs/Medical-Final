@@ -13,8 +13,6 @@ namespace Medical.Models
         public string Rating { get; set; }
         public bool? Shade { get; set; }
 
-       
-
         public virtual Doctor Doctor { get; set; }
         public virtual RatingType RatingType { get; set; }
     }
