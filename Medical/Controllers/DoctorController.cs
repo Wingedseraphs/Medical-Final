@@ -188,6 +188,7 @@ namespace Medical.Controllers
             //{
             //    return RedirectToAction("Index");
             //}
+            
             IEnumerable<Doctor> datas = null;
             if (string.IsNullOrEmpty(vModel.txtKeyword))
             {
@@ -224,15 +225,23 @@ namespace Medical.Controllers
             return View(prod);
         }
 
-        public IActionResult RatingDoctorList(int id)   
+
+
+        //==========冠名==========
+        //瀏覽醫生評論
+        //id寫死
+        public IActionResult RatingDoctorpartail(int id)
         {
-            var result = _db.RatingDoctors.Where(a => a.DoctorId == id)
+            ViewBag.name = _db.RatingDoctors.Where(a => a.DoctorId == id).Select(a => a.Doctor.DoctorName).FirstOrDefault();
+            ViewBag.count = _db.RatingDoctors.Where(a => a.DoctorId == id).Where(a => a.Shade == false).Select(a=>a.Rating).Count();
+
+            var result = _db.RatingDoctors.Where(a => a.DoctorId == id).Where(a => a.Shade == false)
                 .Include(a => a.Doctor)
                 .Include(a => a.RatingType)
                 .ToList();
-
-            return View(result);
+            return PartialView(result);
         }
+
 
     }
 }

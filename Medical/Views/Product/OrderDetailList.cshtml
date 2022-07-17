@@ -9,65 +9,64 @@
 <div class="container-fluid bg-primary py-5 hero-header mb-5">
     <div class="row py-3">
         <div class="col-12 text-center">
-            <h3 class="display-3 text-white animated zoomIn">歷史訂單</h3>
+            <h3 class="display-3 text-white animated zoomIn">訂單</h3>
         </div>
     </div>
 </div>
 <!-- Hero End -->
 <hr />
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                產品編號
-            </th>
-            <th>
-                商品名稱
-            </th>
-            <th>
-                購買日期
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Quantity)
-            </th>
-            <th>
-                購買者
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            int count = 0;
-            foreach (var item in Model)
-            {
-                count++;
-                <tr>
-                    <td>
-                        @count
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Product.ProductName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Order.OrderDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Quantity)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Member.MemberName)
-                    </td>
-                    <td>
-                        @*<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="">新增產品評論</button>*@
-                        @Html.ActionLink("新增評論", "createReview", new { id = item.Product.ProductId }, new { onclick = "return confirm('是否前往新增產品評論?')" })
-                    </td>
-                </tr>
-            }
-        }
-    </tbody>
-</table>
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table m-0">
+                <thead>
+                    <tr>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">產品編號</font></font></th>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">商品名稱</font></font></th>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">商品照片</font></font></th>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">購買日期</font></font></th>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@Html.DisplayNameFor(model => model.Quantity)</font></font></th>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">購買者</font></font></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int count = 0;
+                        foreach (var item in Model)
+                        {
+                            count++;
+
+                           <tr>
+                               <td>
+                                   @count
+                               </td>
+                               <td>
+                                   @Html.DisplayFor(modelItem => item.Product.ProductName)
+                               </td>
+                               <td>
+                                   這裡是照片
+                               </td>
+                               <td>
+                                   <div class="sparkbar" data-color="#00a65a" data-height="20"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> @Html.DisplayFor(modelItem => item.Order.OrderDate)</font></font></div>
+                               </td>
+                               <td><span class="badge badge-primary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@Html.DisplayFor(modelItem => item.Quantity)-套件未套 反白</font></font></span></td>
+                               <td><span class="badge badge-primary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@Html.DisplayFor(modelItem => item.Member.MemberName)-套件未套 反白</font></font></span></td>
+                               <td>
+                                   @Html.ActionLink("新增評論", "createReview", new { id = item.Product.ProductId }, new { @class = "btn btn-primary" })
+                               </td>
+                           </tr>
+                          
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>           
+    </div>
+</div>
+<div>
+    <a asp-action="Index">回到上一頁</a>
+</div>
 <!-- Modal -->
 <!--<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">

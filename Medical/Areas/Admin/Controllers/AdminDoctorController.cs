@@ -263,9 +263,11 @@ namespace Medical.Areas.Admin.Controllers
 
         //==============================冠名======================
         //後台 醫師評論系統  
-        //選中那位醫生 進入醫師評論管理 預設1
+        //選中那位醫生 進入醫師評論管理 
         public IActionResult DoctorRatinglist(int? id)
         {
+            ViewBag.name = _db.Doctors.Where(a => a.DoctorId == id).Select(a => a.DoctorName).FirstOrDefault();
+            ViewBag.id = id;
             IEnumerable<CRatingDoctorViewModel> list = null;
             if (id != 0)
             {
@@ -275,20 +277,57 @@ namespace Medical.Areas.Admin.Controllers
                     Doctor = a.Doctor,
                     RatingType = a.RatingType
                 });
-            }
-
+            }          
             return View(list);
         }
 
-        public IActionResult DoctorRatingDelete(int? id)
+        ////換頁用
+        //[HttpPost]
+        //public IActionResult DoctorRatinglist(int currentPageIndex)
+        //{
+            
+            
+        //    return View(GetDoctorRating(currentPageIndex));
+        //}
+
+        //private CRatingDoctorViewModel GetDoctorRating(int currentPage)
+        //{
+            //IEnumerable<CRatingDoctorViewModel> list = null;
+            //if (id != 0)
+            //{
+            //    list = _db.RatingDoctors.Where(a => a.DoctorId == id).Select(a => new CRatingDoctorViewModel
+            //    {
+            //        RatingDoctor = a,
+            //        Doctor = a.Doctor,
+            //        RatingType = a.RatingType
+            //    });
+            //}
+
+            //return ;
+        //}
+
+
+
+
+
+        public IActionResult DoctorRatingEdit(int? id)
         {
+            
             RatingDoctor result = _db.RatingDoctors.Where(a => a.RatingDoctorId == id).FirstOrDefault();
-            if (result != null)
+            if (result.Shade==false)
             {
-                _db.RatingDoctors.Remove(result);
+                result.Shade = true;
                 _db.SaveChanges();
+                
             }
-            return RedirectToAction("DoctorRatinglist");
+           else if (result.Shade == true)
+            {
+                result.Shade = false;
+                _db.SaveChanges();
+                
+            }
+            return RedirectToAction("Index");
+            //最好還是回到評論清單(待克服)
         }
 
     }

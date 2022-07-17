@@ -2,57 +2,93 @@
 
 @{
     ViewData["Title"] = "DoctorRatinglist";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/Admin/Admin_Layout.cshtml";
 }
 
-<h1>醫生評論管理</h1>
+<h1>醫師評論管理--<strong>@ViewBag.name  醫師</strong></h1>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table m-0">
+                <thead>
+                    <tr>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">評論編號</font></font></th>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">評分</font></font></th>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@Html.DisplayNameFor(model => model.Rating)</font></font></th>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">遮蔽狀態</font></font></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int count = 0;
+                        double total = 0;
+                        string shade = "";
+                        string sign = "";
+                        double a = 0;
+                        foreach (var item in Model)
+                        {
+                            count++;
+
+                            if (item.Shade == true)
+                            {
+                                shade = "已遮蔽";
+                                sign = "danger";
+                            }
+                            else if (item.Shade == false)
+                            {
+                                shade = "正常評論";
+                                sign = "primary";
+
+                            }
+                            <tr>
+                                <td><a href="pages/examples/invoice.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@count</font></font></a></td>
+                                <td><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@Html.DisplayFor(modelItem => item.RatingType.RatingTypeName)</font></font></span></td>
+                                <td>
+                                    <div class="sparkbar" data-color="#00a65a" data-height="20"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@Html.DisplayFor(modelItem => item.Rating)</font></font></div>
+                                </td>
+                                <td><span class="badge badge-@sign"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@shade</font></font></span></td>
+                                <td>
+                                    @Html.ActionLink("切換遮蔽狀態", "DoctorRatingEdit", new { id = item.RatingDoctorId }, new { onclick = "return confirm('是否切換遮蔽狀態?')", @class = "btn btn-primary" })
+
+                                </td>
+                            </tr>
+                            total += Convert.ToDouble(item.RatingType.RatingTypeName);
+                            a = total / count;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        @*========== 換頁 ==========*@
+        <div class="col-md-12 text-center">
+            <form asp-action="DoctorRatinglist" asp-controller="AdminDoctorController" method="post" style="text-align:center">
+                <div class="">
+                    @*<ul class="pagination justify-content-center">
+                        @for (int i = 1; i <= Model.PageCount; i++)
+                        {
+                            <li class="page-item">
+                                @if (i != Model.CurrentPageIndex)
+                                {
+                                    <a class="page-link" href="javascript:PagerClick(@i);">@i</a>
+                                }
+                                else
+                                {
+                                    <a class="page-link"> @i</a>
+                                }
+                            </li>
+                        }
+                    </ul>
+                    <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
+                    <input type="hidden" id="hfCurrentPageIndex" name="@ViewBag.id" />*@
+                </div>
+            </form>
+        </div>
+        <div class="card-footer clearfix">
+            <h2 style="vertical-align: inherit;">平均分數: @a / 5</h2>
+        </div>
+    </div>
+</div>
 <div>
     <a asp-action="Index">回到上一頁</a>
 </div>
-
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                評論編號
-            </th>
-            <th>
-                醫師姓名
-            </th>
-            <th>
-                醫師評分
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Rating)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@{ 
-    int count = 0;
-    foreach (var item in Model) {
-        count++;
-        <tr>
-            <td>
-                @count
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Doctor.DoctorName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RatingType.RatingTypeName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rating)
-            </td>
-            <td>
-                @Html.ActionLink("刪除", "DoctorRatingDelete", new { id = item.RatingDoctorId }, new { onclick = "return confirm('確定要刪除?')" })
-            </td>
-        </tr>
-        }
-    }
-    </tbody>
-</table>
-

@@ -13,6 +13,7 @@ namespace Medical.Models
         public int? RatingTypeId { get; set; }
         public string CommentContent { get; set; }
         public string CreateDate { get; set; }
+        public bool? Shade { get; set; }
 
         public virtual Member Member { get; set; }
         public virtual Product Product { get; set; }

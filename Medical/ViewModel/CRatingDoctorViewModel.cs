@@ -58,6 +58,12 @@ namespace Medical.ViewModel
             get { return _ratingType; }
             set { _ratingType = value; }
         }
-
+        public bool? Shade
+        {
+            get { return _ratingDoctor.Shade; }
+            set { _ratingDoctor.Shade = value; }
+        }
+        public int CurrentPageIndex { get; set; }
+        public int PageCount { get; set; }
     }
 }

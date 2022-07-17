@@ -23,21 +23,45 @@ namespace Medical.Controllers
             _medicalContext = medicalContext;
             environment = myEnvironment;
         }
+        //歷史訂單
+        //預設會員19 需要抓登入資料
+        //id=memberID
+        public IActionResult OrderList(int? id = 19)
+        {
+
+            IEnumerable<OrderDetailViewModel> list = null;
+            if (id != 0)
+            {
+                list = _medicalContext.Orders.Where(a => a.MemberId == id)
+                    .Select(a => new OrderDetailViewModel
+                    {
+                        Order = a,
+                        Member=a.Member,
+                        Orderstate=a.OrderState,
+                        Paytype=a.PayType,
+                        ShipType=a.ShipType
+                    });
+
+            }
+            return View(list);
+        }
+
 
         //關於訂單內產品新增產品評論
-        //先秀出訂單明細表 預設會員19
-        public IActionResult OrderDetailList(int? id=19)
+        //先秀出訂單明細表 
+        //id=orderID
+        public IActionResult OrderDetailList(int? id)
         {
             IEnumerable<OrderDetailViewModel> list = null;
             if (id != 0)
             {
-                list = _medicalContext.OrderDetails.Where(a => a.Order.MemberId == id)
+                list = _medicalContext.OrderDetails.Where(a => a.OrderId == id)
                     .Select(a=>new OrderDetailViewModel
                         {
                             OrderDetail=a,
                             Order=a.Order,
                             Product=a.Product,
-                            Member=a.Order.Member
+                            Member=a.Order.Member,
                             
                         });
               
@@ -70,15 +94,9 @@ namespace Medical.Controllers
             {
                 Review = p,
                 Member = p.Member,
-                RatingType = p.RatingType,
-                //ProductSpecification = p.Product.ProductSpecifications
-
+                RatingType = p.RatingType,             
             }) ;
-            //var p1 = _medicalContext.ProductSpecifications.Select(p => new CReviewViewModel
-            //{
-            //    ProductSpecification=p,
-                
-            //});
+            
 
             return View(list);
         }

@@ -27,9 +27,7 @@ namespace Medical.Controllers
                     Doctor=a.Doctor,
                     Department=a.Department,
                     Room=a.Room,
-                    
-
-                               
+                                                   
                 });
                                   
             return View(result);

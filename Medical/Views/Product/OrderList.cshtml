@@ -1,0 +1,74 @@
+﻿@model IEnumerable<Medical.ViewModel.OrderDetailViewModel>
+@{
+    ViewData["Title"] = "OrderList";
+}
+
+<!-- Hero Start -->
+<div class="container-fluid bg-primary py-5 hero-header mb-5">
+    <div class="row py-3">
+        <div class="col-12 text-center">
+            <h3 class="display-3 text-white animated zoomIn">歷史訂單</h3>
+        </div>
+    </div>
+</div>
+<!-- Hero End -->
+<hr />
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table m-0">
+                <thead>
+                    <tr>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">訂單編號</font></font></th>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">購買日期</font></font></th>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">付款狀態</font></font></th>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">訂單狀態</font></font></th>
+                        <th><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">付款方式</font></font></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int count = 0;
+                        string sign = "";
+                        foreach (var item in Model)
+                        {
+                            if (item.Order.IsPaid == true)
+                            {
+                                sign = "已付款";
+                            }
+                            if (item.Order.IsPaid == false)
+                            {
+                                sign = "未付款";
+                            }
+                            count++;
+                            <tr>
+                                <td>
+                                    @count
+                                </td>
+                                <td>
+                                    @item.Order.OrderDate
+                                </td>
+                                <td>
+                                    @sign
+                                </td>
+                                <td>
+                                    @*<span class="badge badge-denger">*@
+                                    @item.Orderstate.OrderState1
+                                    @*</span>*@
+                                </td>
+                                <td>
+                                    @item.Paytype.PayType1
+                                </td>
+                                <td>
+                                    @Html.ActionLink("顯示訂單內容", "OrderDetailList", new { id = item.Order.OrderId }, new { @class = "btn btn-primary" })
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
