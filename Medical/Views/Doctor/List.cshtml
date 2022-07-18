@@ -41,7 +41,7 @@
             foreach (var item in Model)
             {
                 count++;
-                <tr>
+                <tr>                  
                     <td>
                         @count
                     </td>
@@ -59,10 +59,52 @@
                     </td>
                     <td>
                         @Html.ActionLink("詳細資訊", "Details", new { id = item.DoctorId, @class = "btn btn-primary" })||
-                        @Html.ActionLink("查看評論", "RatingDoctorList", new { id = item.DoctorId, @class = "btn btn-primary" })
+                        <button type="button" id="buttonLoad" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            查看評價
+                        </button>
                     </td>
                 </tr>
             }
         }
     </tbody>
 </table>
+
+@*查看醫師評論*@
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">               
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="tbdRatingList" class="modal-body">
+                @*//這裡放partail*@
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">離開</button>               
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+                   
+         $('#buttonLoad').click(function () {
+             $('#tbdRatingList').load('@Url.Content("~/Doctor/RatingDoctorpartail/1")')
+             console.log(doctorid);
+        })
+
+
+        
+
+
+
+
+
+
+    </script>
+
+
+}

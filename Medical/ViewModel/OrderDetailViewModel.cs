@@ -12,8 +12,13 @@ namespace Medical.ViewModel
         private OrderDetail _OrderDetail;
         private Order _Order;
         private Product _Product;
+        private ProductSpecification _productSpecification;
         private Review _Review;
         private Member _member;
+        private Orderstate _orderstate;
+        private ShipType _shiptype;
+        private Paytype _paytype;
+
         public OrderDetailViewModel()
         {
             _member = new Member();
@@ -21,6 +26,10 @@ namespace Medical.ViewModel
             _Order = new Order();
             _Product = new Product();
             _Review = new Review();
+            _orderstate = new Orderstate();
+            _shiptype = new ShipType();
+            _paytype = new Paytype();
+            _productSpecification = new ProductSpecification();
         }
         public OrderDetail OrderDetail
         {
@@ -37,8 +46,26 @@ namespace Medical.ViewModel
             get { return _member; }
             set { _member = value; }
         }
-
-
+        public Orderstate Orderstate
+        {
+            get { return _orderstate; }
+            set { _orderstate = value; }
+        }
+        public ShipType ShipType
+        {
+            get { return _shiptype; }
+            set { _shiptype = value; }
+        }
+        public Paytype Paytype
+        {
+            get { return _paytype; }
+            set { _paytype = value; }
+        }
+        public ProductSpecification ProductSpecification
+        {
+            get { return _productSpecification; }
+            set { _productSpecification = value; }
+        }
         public int OrderDetailId
         {
             get { return _OrderDetail.OrderDetailId; }
@@ -63,13 +90,13 @@ namespace Medical.ViewModel
 
         public virtual Order Order
         {
-            get { return _OrderDetail.Order; }
-            set { _OrderDetail.Order = value; }
+            get { return _Order; }
+            set { _Order = value; }
         }
         public virtual Product Product
         {
-            get { return _OrderDetail.Product; }
-            set { _OrderDetail.Product = value; }
+            get { return _Product; }
+            set { _Product = value; }
         }
     }
 }

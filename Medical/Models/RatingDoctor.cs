@@ -11,6 +11,7 @@ namespace Medical.Models
         public int DoctorId { get; set; }
         public int RatingTypeId { get; set; }
         public string Rating { get; set; }
+        public bool? Shade { get; set; }
 
         public virtual Doctor Doctor { get; set; }
         public virtual RatingType RatingType { get; set; }

@@ -16,9 +16,6 @@
     <div class="row py-3">
         <div class="col-12 text-center">
             <h3 class="display-3 text-white animated zoomIn">商品總覽</h3>
-            @*<a href="" class="h4 text-white">查看購物車</a>
-                <i class="far fa-circle text-white px-2"></i>
-                <a href="" class="h4 text-white">Dentist</a>*@
         </div>
     </div>
 </div>
@@ -33,24 +30,31 @@
         @*=============== Left--Part--Start================*@
         <div class="col-md-2 h-100">
 
-            
+            <form id="myform" action="productList" method="post">
+                <input type="range" class="form-range" min="0" max="2000" id="customRange2">
 
-            <h3 class="">篩選條件</h3>
-            <hr />
-            <h4>種類</h4>
-            @foreach (var cprod in Model.brandList)
-            {
-                <input class="mt-3" type="checkbox" name="productBrandId" value="@cprod.ProductBrandId" />@:&nbsp<label style="font-size:21px">@cprod.ProductBrandName</label>
+                <label>關鍵字搜尋</label>
+                <input type="text" id="mySearch" class="form-control rounded mt-1" placeholder="搜尋.." style="margin-left: 0;" />
+                <span id="spShow"></span>
                 <br />
-            }
-            <hr />
-            <h4>品牌</h4>
-            @foreach (var cprod in Model.cateList)
-            {
-                <input class="mt-3" type="checkbox" name="productCategoryId" value="@cprod.ProductCategoryId" />@:&nbsp<label style="font-size:21px">@cprod.ProductCategoryName</label>
-                <br />
-            }
-            <hr />
+                <h3 class="">篩選條件</h3>
+                <hr />
+                <h4>品牌</h4>
+                @foreach (var cprod in Model.brandList)
+                {
+                    //string test = "b" + cprod.ProductBrandId;
+                    <input id="" class="mt-3" onchange="test()" type="checkbox" name="brand" value="@cprod.ProductBrandId" />@:&nbsp<label style="font-size:21px">@cprod.ProductBrandName</label>
+                    <br />
+                }
+                <hr />
+                <h4>種類</h4>
+                @foreach (var cprod in Model.cateList)
+                {
+                    <input class="mt-3" onchange="test()" type="checkbox" name="cate" value="@cprod.ProductCategoryId" />@:&nbsp<label style="font-size:21px">@cprod.ProductCategoryName</label>
+                    <br />
+                }
+                <hr />
+            </form>
         </div>
 
         @*=============== Left--Part--End================*@
@@ -74,25 +78,31 @@
             <div>
                 &nbsp;
                 <span style="font-size:16px;font-weight:bold">排序&nbsp;:&nbsp;</span>
-                <select style="font-size:16px;font-weight:bold">
-                    <option value="value">價錢(由高到低)</option>
+                <select id="orderby" style="font-size:16px;font-weight:bold">
+                    <option value="價錢(由高到低)">價錢(由高到低)</option>
+                    <option value="價錢(由低到高)">價錢(由低到高)</option>
+                    <option value="名稱(由Z到A)">名稱(由Z到A)</option>
+                    <option value="名稱(由A到Z)">名稱(由A到Z)</option>
                 </select>
             </div>
             <br />
             <hr />
             @*========== 商品表 ==========*@
-            <div class="row" id="prodRow">
+            <div class="row" id="prodRow" >
                 @{ int count = 0;}
                 @foreach (var cprod in Model.prodSpec)
                 {
                     count++;
 
-                    <div class="col-md-3 col-sm-6 mt-4">
+                    string aa = "b" + cprod.Product.ProductBrandId;
+                    string bb = "c" + cprod.Product.ProductCategoryId;
+
+                    <div class="col-md-3 col-sm-6 mt-4 @aa @bb mycard" >
                         <div class="card h-100">
                             <img src="~/images/@cprod.ProductImage" width="140" height="200" class="card-img-top" />
                             <div class="card-body">
-                                <a href="~/Product/ProductDetail?productName=@cprod.Product.ProductName" id="@cprod.ProductId" onclick="detail(event)"> <h5>@Html.DisplayFor(modelItem => cprod.Product.ProductName)</h5> </a>
-                                <span> @Html.DisplayFor(modelItem => cprod.UnitPrice)</span>
+                                <a href="~/Product/ProductDetail?productName=@cprod.Product.ProductName" id="@cprod.ProductId" onclick="detail(event)"> <h5 class="prodName">@Html.DisplayFor(modelItem => cprod.Product.ProductName)</h5> </a>
+                                NT$<span class="SPrice"> @Html.DisplayFor(modelItem => cprod.UnitPrice)</span>
                             </div>
                         </div>
                     </div>
@@ -137,10 +147,134 @@
 
 @section Scripts{
 
-    <script type="text/javascript">
-        function PagerClick(index) {
-            document.getElementById("hfCurrentPageIndex").value = index;
-            document.forms[0].submit();
+    @*後端換頁*@
+    @*<script type="text/javascript">
+            function PagerClick(index) {
+                document.getElementById("hfCurrentPageIndex").value = index;
+                document.forms[0].submit();
+            }
+        </script>*@
+
+    <script>
+
+        const mySearch = $("#mySearch");
+
+        $("form").submit(function (e) {
+            e.preventDefault();
+        });
+
+
+        mySearch.on("blur", function () {
+            $(":checkbox").prop("checked",false)
+            var myKeyword = (this).value;
+            $(".mycard").hide();
+
+            if ($(`h5:contains(${myKeyword})`).length == 0) {
+                $("#spShow").text("查無此商品");
+                $(".mycard").show();
+            }
+            else
+                $("#spShow").text("");
+                $(`h5:contains(${myKeyword})`).parents(".mycard").show();
+               
+
+        })
+
+        console.log($(".SPprice").text());
+
+
+        //排序
+        $("#orderby").change(function () {
+
+
+            $(function (){
+                var Pasc = function (a, b) {
+                    return parseInt($(a).find(".SPrice").text()) > parseInt($(b).find(".SPrice").text()) ? 1 : -1;
+                }
+
+                var Pdesc = function (a, b) {
+                    return parseInt($(a).find(".SPrice").text()) > parseInt($(b).find(".SPrice").text()) ? -1 : 1;
+                }
+
+                var Nasc = function (a, b) {
+                    return $(a).find(".prodName").text() > $(b).find(".prodName").text() ? 1 : -1;
+                }
+
+                var Ndesc = function (a, b) {
+                    return $(a).find(".prodName").text() > $(b).find(".prodName").text() ? -1 : 1;
+                }
+
+                function sortBySpan(sortBy) {
+                    var sortEle = $('#prodRow>div').sort(sortBy);
+                    $("#prodRow").empty().append(sortEle);
+                }
+
+
+                var option = $("#orderby").val();
+                //console.log(option);
+                switch (option) {
+                    case "價錢(由低到高)":
+                        console.log("價錢(由低到高)");
+                        sortBySpan(Pasc);
+                        console.log($(".SPprice").text());
+                        break;
+                    case "價錢(由高到低)":
+                        console.log("價錢(由高到低)");
+                        sortBySpan(Pdesc);
+                        console.log($(".SPprice").text());
+                        break;
+                    case "名稱(由Z到A)":
+                        console.log("價錢(由高到低)");
+                        sortBySpan(Ndesc);
+                        console.log($(".prodNamerice").text());
+                        break;
+                    case "名稱(由A到Z)":
+                        console.log("價錢(由高到低)");
+                        sortBySpan(Nasc);
+                        console.log($(".prodName").text());
+                        break;
+                }
+
+            })
+
+           
+        });
+
+
+
+        function test() {
+
+            //console.log($(event.target).val());
+
+            $(".mycard").hide();
+
+
+
+            //console.log($(`${number}`).siblings().hide());
+            //$(`${number}`).show();
+
+            var bArray = $('input:checkbox:checked[name="brand"]').map(function () { return $(this).val(); }).get(); //陣列
+            var cArray = $('input:checkbox:checked[name="cate"]').map(function () { return $(this).val(); }).get();
+
+            if (bArray.length === 0 && cArray.length === 0)
+                $(".mycard").show();
+            else {
+                $.each(bArray, function (idx, value) {
+                    let number = ".b" + value;
+
+                    //console.log(number);
+                    $(`${number}`).show();
+                })
+
+                $.each(cArray, function (idx, value) {
+                    let number = ".c" + value;
+
+                    //console.log(number);
+                    $(`${number}`).show();
+                })
+            }
         }
+
+
     </script>
 }

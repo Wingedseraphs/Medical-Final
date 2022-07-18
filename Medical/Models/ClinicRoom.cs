@@ -14,6 +14,7 @@ namespace Medical.Models
 
         public int RoomId { get; set; }
         public string RoomName { get; set; }
+        public int? Number { get; set; }
 
         public virtual ICollection<ClinicDetail> ClinicDetails { get; set; }
     }
