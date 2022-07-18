@@ -32,8 +32,8 @@
                         if (item.couponDetail != null)
                         {
                             btnYesNo = "btnTaken";
-                            
-                             yesorno = "您已 領取";                         
+
+                            yesorno = "您已 領取";
                         }
                         else
                         {
@@ -41,55 +41,97 @@
                             btnYesNo = "btnNotTaken";
                         }
                         <!-- ======================  折價券模型 Start ========================-->
-                    <form action="~/Product/ReceiveCoupon" method="post" style="margin:0;padding:0;">
-                        <div class="row" style="width: 95%; height: 12em; margin-bottom: 2em; max-height: 30%; background-image: url('../images/pngtree-simple-blue-business-coupon-background-image_229938.jpg'); background-size: 100% 100%; ">
-                            <div class="col col-md-9 row" style="margin: auto;height: 100%;border-right: 1px dashed black;">
-                                <div class="row" style="height: 90%;width:100%;border: 2px solid rgb(210, 210, 210);margin: auto;">
-                                    <div class="col col-md-4" style="height: 100%;margin: auto; text-align: center;display: flex;justify-content: center;">
-                                        <p style="margin: auto;height: 80%;width:100%;vertical-align: middle;color: black;"><span style="font-size: 5em;color: black;">@item.CouponDiscountNum</span>$</p>
-                                    </div>
-                                    <div class="col col-md-8" style="height: 100%;text-align: center;display: flex;justify-content: center;">
-                                        <p style="margin: auto;height: 60%;width:100%;vertical-align: middle;font-size: 2em;">消費滿<span style="color: goldenrod;font-size: 36px;">@item.CouponRequireNum</span>元可用折價券</p>
+                        <form action="~/Product/ReceiveCoupon" method="post" style="margin:0;padding:0;" id="myform">
+                            <div class="row" style="width: 95%; height: 12em; margin-bottom: 2em; max-height: 30%; background-image: url('../images/pngtree-simple-blue-business-coupon-background-image_229938.jpg'); background-size: 100% 100%; ">
+                                <div class="col col-md-9 row" style="margin: auto;height: 100%;border-right: 1px dashed black;">
+                                    <div class="row" style="height: 90%;width:100%;border: 2px solid rgb(210, 210, 210);margin: auto;">
+                                        <div class="col col-md-4" style="height: 100%;margin: auto; text-align: center;display: flex;justify-content: center;">
+                                            <p style="margin: auto;height: 80%;width:100%;vertical-align: middle;color: black;"><span style="font-size: 5em;color: black;">@item.CouponDiscountNum</span>$</p>
+                                        </div>
+                                        <div class="col col-md-8" style="height: 100%;text-align: center;display: flex;justify-content: center;">
+                                            <p style="margin: auto;height: 60%;width:100%;vertical-align: middle;font-size: 2em;">消費滿<span style="color: goldenrod;font-size: 36px;">@item.CouponRequireNum</span>元可用折價券</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <input type="hidden" name="MemberId" value="@item.MemId" />
-                            <input type="hidden" name="CouponId" value="@item.coupon.CouponId" />
-                            <input type="hidden" name="CouponUsed" value="False" />
-                            <div class="col col-md-3 row" style="margin: auto;height: 100%;">
+                                <input type="hidden" name="MemberId" value="@item.MemId" />
+                                <input type="hidden" name="CouponId" value="@item.coupon.CouponId" />
+                                <input type="hidden" name="CouponUsed" value="False" />
+                                <div class="col col-md-3 row" style="margin: auto;height: 100%;">
 
-                                <div style="height: 90%;width:100%;border: 2px dashed rgb(210, 210, 210);margin: auto; text-align: center;display: flex;justify-content: center;">
-                                    <p style="margin: auto;height: 60%;width:100%; min-width:100%;vertical-align: middle;color: white;font-size: 28px;"><button type="button" style="color: goldenrod; font-size: 30px; border: 0;" class="btn btn-outline-dark @btnYesNo">@yesorno</button></p>
+                                    <div style="height: 90%;width:100%;border: 2px dashed rgb(210, 210, 210);margin: auto; text-align: center;display: flex;justify-content: center;">
+                                        <p style="margin: auto;height: 60%;width:100%; min-width:100%;vertical-align: middle;color: white;font-size: 28px;"><button type="button" style="color: goldenrod; font-size: 30px; border: 0;" class="btn btn-outline-dark @btnYesNo">@yesorno</button></p>
+                                    </div>
+
                                 </div>
 
                             </div>
-
-                        </div>
-                    </form>
-                            <!-- ======================  折價券模型 End ========================-->
-                            }
-                            }
+                        </form>
+                        <!-- ======================  折價券模型 End ========================-->
+                    }
+                }
 
 
-                    </div>
+            </div>
         </div>
     </div>
 </div>
 
-@section Scripts{ 
+@section Scripts{
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>
+    <script>
 
-    $(".btnTaken").attr("disabled", "disabled");
-    $(".btnTaken").css("color", "#E0E0E0");
+        $(".btnTaken").attr("disabled", "disabled");
+        $(".btnTaken").css("color", "#E0E0E0");
 
-    $.ajax({
+        function delaySubmit(myform) {
+            setTimeout(`submitform(${myform})`, 1000);
+        }
+        function submitform(myform) {
+            myform.submit();
+        }
 
 
-    })
+        $('.btnNotTaken').on("click", function () {
+
+            let myform = $(event.target).parents("form");
 
 
-</script>
+
+            let timerInterval
+            Swal.fire({
+                icon: 'success',
+                title: '成功',
+                html: '已將此優惠券加入您的帳號',
+                timer: 1000,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading()
+                    const b = Swal.getHtmlContainer().querySelector('b')
+                    timerInterval = setInterval(() => {
+                        b.textContent = Swal.getTimerLeft()
+                    }, 100)
+                },
+                willClose: () => {
+                    clearInterval(timerInterval)
+                }
+            }).then((result) => {
+                /* Read more about handling dismissals below */
+                if (result.dismiss === Swal.DismissReason.timer) {
+                    console.log('I was closed by the timer')
+                }
+            })
+
+            myform.submit();
+        })
+
+        $.ajax({
+
+
+        })
+
+
+    </script>
 
 
 }
