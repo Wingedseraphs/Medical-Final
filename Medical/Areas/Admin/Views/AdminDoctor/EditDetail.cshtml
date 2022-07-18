@@ -19,7 +19,7 @@
                 <input type="hidden" name="DoctorID" value="@Model.DoctorID">
                 <input type="hidden" name="MemberID" value="@Model.MemberID">
                 <input type="hidden" name="DepartmentID" value="@Model.DepartmentID">
-                <input type="hidden" name="DeptCategoryID" value="@Model.DeptCategoryID">
+                @*<input type="hidden" name="DeptCategoryID" value="@Model.DeptCategoryID">*@
                 <input type="hidden" name="ExperienceID" value="@Model.ExperienceID">
                 <div class="form-group">
                     <label asp-for="DoctorName" class="control-label"></label>
@@ -53,11 +53,7 @@
                     <input asp-for="DepName" class="form-control" id="dpn" />
                     <span asp-validation-for="DepName" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <label asp-for="DeptCategoryName" class="control-label"></label>
-                    <input asp-for="DeptCategoryName" class="form-control" id="dcn" />
-                    <span asp-validation-for="DeptCategoryName" class="text-danger"></span>
-                </div>
+                
                 <div class="form-group">
                     <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('確定修改?')" />
                 </div>
