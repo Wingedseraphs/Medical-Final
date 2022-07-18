@@ -11,7 +11,6 @@ namespace Medical.Models
         {
             ArticleComments = new HashSet<ArticleComment>();
             CaseRecords = new HashSet<CaseRecord>();
-            CouponDetails = new HashSet<CouponDetail>();
             Doctors = new HashSet<Doctor>();
             Orders = new HashSet<Order>();
             Reserves = new HashSet<Reserve>();
@@ -39,7 +38,6 @@ namespace Medical.Models
         public virtual RoleType RoleNavigation { get; set; }
         public virtual ICollection<ArticleComment> ArticleComments { get; set; }
         public virtual ICollection<CaseRecord> CaseRecords { get; set; }
-        public virtual ICollection<CouponDetail> CouponDetails { get; set; }
         public virtual ICollection<Doctor> Doctors { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<Reserve> Reserves { get; set; }
