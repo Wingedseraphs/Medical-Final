@@ -16,10 +16,10 @@
 @using (Html.BeginForm())
 {
     @:醫生查詢 @Html.TextBox("txtKeyword")
-    <input type="submit" value="Search" />
+    <input type="submit" value="查詢" class="btn btn-primary" />
 }
 
-<table class="table">
+<table class="table table-sm align-middle table-hover" style="margin-bottom:100px">
     <thead>
         <tr>
             <th>

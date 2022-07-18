@@ -17,10 +17,10 @@
 @using (Html.BeginForm())
 {
     @:醫生查詢 @Html.TextBox("txtKeyword")
-    <input type="submit" value="Search" />
+    <input type="submit" value="查詢" class="btn btn-primary" />
 }
 <p></p>
-<table class="table">
+<table class="table"  style="margin-bottom:100px">
     <thead>
         <tr>
             <th>
@@ -58,7 +58,7 @@
                         @Html.DisplayFor(modelItem => item.DiagnosticRecord)
                     </td>
                     @*<td>
-                        @Html.DisplayFor(modelItem => item.SyndromeDescription)
+                            @Html.DisplayFor(modelItem => item.SyndromeDescription)
                     </td>*@
                     <td>
                         @Html.DisplayFor(modelItem => item.TreatmentDetail.TreatmentDetail1)
