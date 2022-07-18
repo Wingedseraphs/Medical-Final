@@ -62,7 +62,7 @@ namespace Medical.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Medical;Integrated Security=True");
             }
         }
@@ -270,38 +270,6 @@ namespace Medical.Models
             });
 
             modelBuilder.Entity<Coupon>(entity =>
-
-            {
-                entity.ToTable("Coupon");
-
-                entity.Property(e => e.CouponId).HasColumnName("CouponID");
-            });
-
-            modelBuilder.Entity<CouponDetail>(entity =>
-            {
-                entity.ToTable("CouponDetail");
-
-                entity.Property(e => e.CouponDetailId).HasColumnName("CouponDetailID");
-
-                entity.Property(e => e.CouponId).HasColumnName("CouponID");
-
-                entity.Property(e => e.MemberId).HasColumnName("MemberID");
-
-                entity.HasOne(d => d.Coupon)
-                    .WithMany(p => p.CouponDetails)
-                    .HasForeignKey(d => d.CouponId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CouponDetail_Coupon");
-
-                entity.HasOne(d => d.Member)
-                    .WithMany(p => p.CouponDetails)
-                    .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CouponDetail_Member");
-            });
-
-            modelBuilder.Entity<Department>(entity =>
-
             {
                 entity.ToTable("Coupon");
 
@@ -482,10 +450,6 @@ namespace Medical.Models
 
                 entity.Property(e => e.CityId).HasColumnName("CityID");
 
-
-                entity.Property(e => e.CouponDetailId).HasColumnName("CouponDetailID");
-
-
                 entity.Property(e => e.MemberId).HasColumnName("MemberID");
 
                 entity.Property(e => e.OrderDate).HasMaxLength(50);
@@ -503,11 +467,9 @@ namespace Medical.Models
                     .HasForeignKey(d => d.CityId)
                     .HasConstraintName("FK_Order_City");
 
-
                 entity.HasOne(d => d.CouponDetail)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.CouponDetailId)
-
                     .HasConstraintName("FK_Order_CouponDetail");
 
                 entity.HasOne(d => d.Member)
