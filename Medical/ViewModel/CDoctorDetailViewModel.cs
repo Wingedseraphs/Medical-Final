@@ -16,7 +16,6 @@ namespace Medical.ViewModels
             _doc = new Doctor();
             _dep = new Department();
             _exp = new Experience();
-            _depC = new DepartmentCategory();
             _memb = new Member();
         }
         public Member member
@@ -39,26 +38,27 @@ namespace Medical.ViewModels
             get { return _exp; }
             set { _exp = value; }
         }
-        public DepartmentCategory departmentCategory
+
+        public int DoctorID
         {
-            get { return _depC; }
-            set { _depC = value; }
-        }
-        public int DoctorID {
             get { return _doc.DoctorId; }
             set { _doc.DoctorId = value; }
         }
         public int MemberID
         {
-            get 
-            { return _memb.MemberId;
-                            }
-            set { _memb.MemberId = value;
+            get
+            {
+                return _memb.MemberId;
+            }
+            set
+            {
+                _memb.MemberId = value;
                 _doc.MemberId = value;
             }
         }
         [DisplayName("醫生姓名")]
-        public string DoctorName {
+        public string DoctorName
+        {
             get { return _doc.DoctorName; }
             set { _doc.DoctorName = value; }
         }
@@ -68,12 +68,14 @@ namespace Medical.ViewModels
             set { _doc.DepartmentId = value; }
         }
         [DisplayName("學歷")]
-        public string Education {
+        public string Education
+        {
             get { return _doc.Education; }
             set { _doc.Education = value; }
         }
         [DisplayName("職稱")]
-        public string JobTitle {
+        public string JobTitle
+        {
             get { return _doc.JobTitle; }
             set { _doc.JobTitle = value; }
         }
@@ -84,7 +86,8 @@ namespace Medical.ViewModels
             set { _doc.PicturePath = value; }
         }
         [DisplayName("經歷")]
-        public string Experience {
+        public string Experience
+        {
             get { return _exp.Experience1; }
             set { _exp.Experience1 = value; }
         }
@@ -104,28 +107,24 @@ namespace Medical.ViewModels
         //    set { department.DepartmentId = value; }
         //}
         [DisplayName("專長")]
-        public string DepName {
+        public string DepName
+        {
             get { return _dep.DeptName; }
             set { _dep.DeptName = value; }
         }
 
-        public int DeptCategoryID{
-            get { return _depC.DeptCategoryId; }
-            set { _depC.DeptCategoryId = value; }
-        }
-        [DisplayName("專長科別")]
-        public string DeptCategoryName {
-            get { return _depC.DeptCategoryName; }
-            set { _depC.DeptCategoryName = value; }
-        }
+
+
         public IFormFile photo { get; set; }
         [DisplayName("身分證字號")]
-        public string IdentityID {
+        public string IdentityID
+        {
             get { return _memb.IdentityId; }
             set { _memb.IdentityId = value; }
         }
         [DisplayName("密碼")]
-        public string Password {
+        public string Password
+        {
             get { return _memb.Password; }
             set { _memb.Password = value; }
         }
@@ -141,6 +140,7 @@ namespace Medical.ViewModels
             get { return _memb.Role; }
             set { _memb.Role = value; }
         }
-        
+
     }
 }
+
