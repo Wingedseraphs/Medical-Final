@@ -17,6 +17,7 @@ namespace Medical.Models
         public int? AdminId { get; set; }
         public string Articeltitle { get; set; }
         public string ArticleContent { get; set; }
+        public string ArPicturePath { get; set; }
         public string CreateDate { get; set; }
 
         public virtual Administarator Admin { get; set; }

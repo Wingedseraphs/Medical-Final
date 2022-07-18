@@ -12,7 +12,7 @@ namespace Medical.Models
         public int? NewsCategoryId { get; set; }
         public string NewsTitle { get; set; }
         public string NewsContent { get; set; }
-        public DateTime? PublishDate { get; set; }
+        public string NewsPicturePath { get; set; }
         public DateTime? CreateDate { get; set; }
 
         public virtual Administarator Admin { get; set; }

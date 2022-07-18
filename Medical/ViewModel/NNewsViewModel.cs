@@ -1,4 +1,5 @@
 ﻿using Medical.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,11 +44,12 @@ namespace Medical.ViewModel
             get { return _news.NewsContent; }
             set { _news.NewsContent = value; }
         }
-        public DateTime? PublishDate
+        public string NewsPicturePath
         {
-            get { return _news.PublishDate; }
-            set { _news.PublishDate = value; }
+            get { return _news.NewsPicturePath; }
+            set { _news.NewsPicturePath = value; }
         }
+        public IFormFile photo { get; set; }
         public DateTime? CreateDate
         {
             get { return _news.CreateDate; }

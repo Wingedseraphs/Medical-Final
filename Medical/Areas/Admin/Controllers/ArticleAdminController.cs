@@ -64,7 +64,7 @@ namespace Medical.Controllers
         [HttpPost]
         public IActionResult Create(Article a)
         {
-            
+            a.CreateDate = DateTime.Now.ToString("yyyy/MM/dd");
             _medicalContext.Articles.Add(a);
             _medicalContext.SaveChanges();
             return RedirectToAction("List");
@@ -97,7 +97,7 @@ namespace Medical.Controllers
             if (ar != null)
             {
                 ar.Doctor= a.Doctor;
-                ar.CreateDate = a.CreateDate;
+                ar.CreateDate = DateTime.Now.ToString("yyyy/MM/dd");
                 ar.ArticleContent = a.ArticleContent;
                 ar.Articeltitle = a.Articeltitle;
             }

@@ -130,6 +130,8 @@ namespace Medical.Models
 
                 entity.Property(e => e.AdminId).HasColumnName("AdminID");
 
+                entity.Property(e => e.ArPicturePath).HasMaxLength(50);
+
                 entity.Property(e => e.Articeltitle).HasMaxLength(50);
 
                 entity.Property(e => e.CreateDate).HasMaxLength(50);
@@ -420,7 +422,7 @@ namespace Medical.Models
 
                 entity.Property(e => e.NewsCategoryId).HasColumnName("NewsCategoryID");
 
-                entity.Property(e => e.PublishDate).HasColumnType("datetime");
+                entity.Property(e => e.NewsPicturePath).HasMaxLength(50);
 
                 entity.HasOne(d => d.Admin)
                     .WithMany(p => p.News)

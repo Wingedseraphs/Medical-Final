@@ -5,6 +5,20 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section css{
+    <style>
+         img {
+            /*max-width: 100%;*/
+            /*            height: 50%;*/
+            /*            background-position: center center;*/
+            /*            background-size: cover;*/
+        }
+    </style>
+}
+
+
+
+
 <!-- Hero Start -->
 <div class="container-fluid bg-primary py-5 hero-header mb-5">
     <div class="row py-3">
@@ -14,7 +28,6 @@
     </div>
 </div>
 <!-- Hero End -->
-<hr />
 
 @using (Html.BeginForm())
 {
@@ -22,46 +35,125 @@
     @Html.TextBox("txtKeyword", "", new { @class = "font-weight-bold", style = "font-size:25px;border-radius:15px" })
     <button type="submit" class="btn btn-block btn-secondary btn-lg">查詢</button>
 }
-@{
-    int count = 0;
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">篇名</h3>
+
+@*第一種*@
+<div class="col-lg-4 col-md-4 wow fadeInUp" data-wow-delay="0.1s" style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+    <div class="room-item shadow rounded overflow-hidden">
+        <div class="blog__item__pic" style="width: 400px;height:200px">
+            <img class="img-fluid" src="~/img/pic.png" alt="" />
         </div>
-
-        <div class="card-body">
-            <div id="example2_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                <div class="row"><div class="col-sm-12 col-md-6"></div><div class="col-sm-12 col-md-6"></div></div><div class="row">
-                    <div class="col-sm-12">
-                        <table id="example2" class="table table-bordered table-hover dataTable dtr-inline" aria-describedby="example2_info">
-                            <thead>
-                                <tr>
-                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending">序</th>
-                                    <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">發佈日期</th>
-                                    <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Platform(s): activate to sort column ascending">醫生</th>
-                                    <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Engine version: activate to sort column ascending">疾病</th>
-                                    <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending">文章內容</th>
-                            </thead>
-                            <tbody>
-
-                                @foreach (var item in Model)
-                                {
-                                    count++;
-                                    <tr class="odd">
-                                        <td class="dtr-control sorting_1 font-weight-bold" tabindex="0" style="width:5%">@count</td>
-                                        <td style="width:10%" class="font-weight-bold">@Html.DisplayFor(modelItem => item.CreateDate)</td>
-                                        <td style="width:10%" class="font-weight-bold">@Html.DisplayFor(modelItem => item.Doctor.DoctorName)</td>
-                                        <td style="width:15%" class="font-weight-bold">@Html.DisplayFor(modelItem => item.Articeltitle)</td>
-                                        <td style="width:50%" class="font-weight-bold">@Html.DisplayFor(modelItem => item.ArticleContent)</td>
-                                    </tr>
-                                }
-                            </tbody>
-
-                        </table>
-                    </div>
+        <div class="p-4 mt-2">
+            <div class="d-flex justify-content-between mb-3">
+                <h5 class="mb-0">世界宗教博物館門票</h5>
+                <div class="ps-2">
+                    <i id="btn_heart" class="fa-solid fa-heart " style="padding:0px 0 0 10px ;font-size:150% "></i>
+                    <small class="fa fa-star text-primary"><span> 5.0</span></small>
                 </div>
+            </div>
+            <h6>
+                <a href="/News/BlogDetail?id=4"></a>
+                <a href="/News/BlogDetail?id=4">日本伊勢神宮、台灣路思義教堂、印尼婆羅浮屠、以色列圓頂清真寺……等十座知名世界經典宗教建築</a>
+            </h6>
 
+            <div class="d-flex justify-content-between">
+                <a href="/News/BlogDetail?id=4" class="blog__btn">READ MORE <span class="arrow_right"></span></a>
             </div>
         </div>
     </div>
-}
+</div>
+
+
+
+@*第二種*@
+<div class="row row-cols-1 row-cols-md-3">
+    <div class="col mb-4">
+        <div class="card h-100">
+            <img src="~/img/pic.png" class="card-img-top" alt="...">
+            <a href="......">
+                <i class="fa fa-calendar"></i>   2022/07/12 - 09:39
+            </a>
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <i class="fa fa-calendar">2022/07/12 </i>   
+                <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+            </div>
+            <button type="button" href="..." class="btn btn-success">read more</button>
+            <div class="card-footer">
+                <small class="text-muted">Last updated 3 mins ago</small>
+            </div>
+        </div>
+    </div>
+    <div class="col mb-4">
+        <div class="card h-100">
+            <img src="~/img/about.jpg" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">This is a short card.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col mb-4">
+        <div class="card h-100">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col mb-4">
+        <div class="card h-100">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@*@{
+        int count = 0;
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">篇名</h3>
+            </div>
+
+            <div class="card-body">
+                <div id="example2_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                    <div class="row"><div class="col-sm-12 col-md-6"></div><div class="col-sm-12 col-md-6"></div></div><div class="row">
+                        <div class="col-sm-12">
+                            <table id="example2" class="table table-bordered table-hover dataTable dtr-inline" aria-describedby="example2_info">
+                                <thead>
+                                    <tr>
+                                        <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending">序</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">發佈日期</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Platform(s): activate to sort column ascending">醫生</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Engine version: activate to sort column ascending">疾病</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending">文章內容</th>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model)
+                                    {
+                                        count++;
+                                        <tr class="odd">
+                                            <td class="dtr-control sorting_1 font-weight-bold" tabindex="0" style="width:5%">@count</td>
+                                            <td style="width:10%" class="font-weight-bold">@Html.DisplayFor(modelItem => item.CreateDate)</td>
+                                            <td style="width:10%" class="font-weight-bold">@Html.DisplayFor(modelItem => item.Doctor.DoctorName)</td>
+                                            <td style="width:15%" class="font-weight-bold">@Html.DisplayFor(modelItem => item.Articeltitle)</td>
+                                            <td style="width:50%" class="font-weight-bold">@Html.DisplayFor(modelItem => item.ArticleContent)</td>
+                                        </tr>
+                                    }
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }*@

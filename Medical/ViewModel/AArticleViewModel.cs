@@ -1,4 +1,5 @@
 ﻿using Medical.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -54,6 +55,12 @@ namespace Medical.ViewModel
             get { return _article.ArticleContent; }
             set { _article.ArticleContent = value; }
         }
+        public string ArPicturePath
+        {
+            get { return _article.ArPicturePath; }
+            set { _article.ArPicturePath = value; }
+        }
+        public IFormFile photo { get; set; }
         [DisplayName("發佈日期")]
         [Required(ErrorMessage = "*此欄必填*")]
         public string CreateDate

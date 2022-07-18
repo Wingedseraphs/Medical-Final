@@ -5,79 +5,122 @@
     Layout = "~/Areas/Admin/Admin_Layout.cshtml";
 }
 
+@section Styles{
+
+    @*修改*@
+    <style>
+
+        .card {
+            margin-left: 20px;
+        }
+
+            .card div {
+                margin-left: 20px;
+            }
+
+        .form-group select {
+            border: 2px solid gold;
+            border-radius: 10px;
+        }
+
+        .form-group .form-control {
+            border: 2px solid gold;
+            border-radius: 10px;
+        }
+
+        .form-group textarea {
+            border: 2px solid gold;
+            border-radius: 10px;
+        }
+
+        .form-group label {
+            font-size: 20px;
+            font-family: 微軟正黑體;
+            font-weight: bold;
+        }
+
+        #selDoctorName option {
+            font-size: 20px;
+            font-family: 微軟正黑體;
+            font-weight: bold;
+        }
+    </style>
+}
 
 
 
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>新增廣告</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Blank Page</li>
-                    </ol>
-                </div>
-            </div>
+<div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            @*修改*@
+            <h1 style="font-family: 微軟正黑體;font-weight:bold;margin-left:100px">新增廣告(Create)</h1>
         </div>
+    </div>
+</div>
 
 
 
-        <div class="card">
+@*修改*@
+<div class="card" style="padding-top:30px">
 
-            <h4>廣告內容</h4>
-            <hr />
-            <div class="row">
-                <div class="col-md-4">
-                    <form asp-action="Create" enctype="multipart/form-data" method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div class="form-group">
-                            <input type="hidden" asp-for="No" class="form-control" />
-                            <span asp-validation-for="No" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="AdminId" class="control-label" hidden="hidden"></label>
-                            <input asp-for="AdminId" class="form-control" type="hidden" />
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="AdTitle" class="control-label"></label>
-                            <input asp-for="AdTitle" class="form-control" />
-                            <span asp-validation-for="AdTitle" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="AdContant" class="control-label"></label>
-                            <textarea asp-for="AdContant" class="form-control" style="width:500px;height:200px;font-size:15px"></textarea>
-                            <span asp-validation-for="AdContant" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="AdPicturePath" class="control-label"></label>
-                            <input name="photo" type="file" asp-for="AdPicturePath" class="form-control" />
-                            <span asp-validation-for="AdPicturePath" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Adstatue.Adstatue" class="control-label"></label>
-                            <select asp-for="Adstatue.Adstatue" class="form-control form-control-lg " id="selAdstatue"></select>
-                            <span asp-validation-for="Adstatue.Adstatue" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" value="送出" class="btn btn-primary" onclick="return confirm('確定新增此資料嗎??')" />
-                        </div>
-                    </form>
-                </div>
+    @*修改*@
+    <div class="col-md-5">
+        <form asp-action="Create" enctype="multipart/form-data" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input type="hidden" asp-for="No" class="form-control" />
+                <span asp-validation-for="No" class="text-danger"></span>
             </div>
-
-            <div>
-                @Html.ActionLink("回到廣告列表", "List", "AdvertiseAdmin", "", new { @class = "btn btn-outline-warning btn-sm" })
+            <div class="form-group">
+                <label asp-for="AdminId" class="control-label" hidden="hidden"></label>
+                <input asp-for="AdminId" class="form-control" type="hidden" />
             </div>
+            <div class="form-group">
+                <label asp-for="AdTitle" class="control-label"></label>
+                <input asp-for="AdTitle" class="form-control" />
+                <span asp-validation-for="AdTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AdContant" class="control-label"></label>
+                <textarea id="editor" asp-for="AdContant" class="form-control" style="width:500px;height:200px;font-size:15px"></textarea>
+                <span asp-validation-for="AdContant" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AdPicturePath" class="control-label"></label>
+                <input name="photo" type="file" asp-for="AdPicturePath" class="form-control" />
 
-        </div>
+            </div>
+            <div class="form-group">
+                @*修改*@
+                <label asp-for="Adstatue.Adstatue" class="control-label">狀態</label>
+                <select asp-for="Adstatue.Adstatue" class="form-control form-control-lg " id="selAdstatue"></select>
+                <span asp-validation-for="Adstatue.Adstatue" class="text-danger"></span>
+            </div>
+            @*修改*@
+            <div class="form-group btn btn-success">
+                <i class="fas fa-plus">
+                    <input type="submit" value="新增" class="btn btn-success" onclick="return confirm('確定新增此資料嗎??')" style="width:40px;height:30px;margin:0;padding:0;font-weight:bold;" />
+                </i>
+            </div>
+        </form>
+    </div>
+    @*修改*@
+    <div style="margin: 0 0 50px 45px">
+        <a asp-action="List" type="button" class="btn bg-gradient-warning" style="border-radius: 5px; font-weight: bold"><i class="fa fa-book" style="margin-right: 10px;"></i>回到廣告內容</a>
+    </div>
+</div>
 
- 
+
+
 
 
 @section Scripts {
     <script>
+        //增加文章內容的格式轉換
+        ClassicEditor
+            .create(document.querySelector('#editor'));
+
+
     LoadAdstatue();
 
     async function LoadAdstatue() {
