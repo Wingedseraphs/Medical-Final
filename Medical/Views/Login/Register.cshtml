@@ -40,15 +40,13 @@
                 <span asp-validation-for="BirthDay" class="text-danger"></span>
             </div>
             <div class="form-group">
-                @*<label asp-for="GenderId" class="control-label"></label>
-        <input asp-for="GenderId" class="form-control mb-2" />
-        <span asp-validation-for="GenderId" class="text-danger"></span>*@
-                <select id="genderSelect" asp-for="GenderId">
-                    <option>男</option>
-                    <option>女</option>
-                    @*目前先寫死，之後用ajax?*@
+                <select asp-for="GenderId">
+                    <option>性別</option>
+                    @foreach (var item in Model.MemGender)
+                    {
+                        <option value="@item.GenderId">@item.Gender1</option>
+                    }
                 </select>
-                @*<select id="select1"></select>*@
             </div>
 
             <div class="form-group">
@@ -57,16 +55,21 @@
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
             <div class="form-group" hidden="hidden">
-                @*設定隱藏並給預設身分1*@
+                @*設定隱藏並給預設身分1後台修改*@
                 <label asp-for="Role" class="control-label"></label>
                 <input asp-for="Role" class="form-control mb-2" value="1" />
                 <span asp-validation-for="Role" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CityId" class="control-label"></label>
-                <input asp-for="CityId" class="form-control mb-2" />
-                <span asp-validation-for="CityId" class="text-danger"></span>
+                <select asp-for="CityId">
+                    <option>縣市</option>
+                    @foreach (var item in Model.MemCity)
+                    {
+                        <option value="@item.CityId">@item.CityName</option>
+                    }
+                </select>
             </div>
+
             <div class="form-group">
                 <label asp-for="Address" class="control-label"></label>
                 <input asp-for="Address" class="form-control mb-2" id="address" />
@@ -102,11 +105,11 @@
             $("#phone").val("0911999999")
             $("#address").val("大安區復興南路一段390號")
         })
-        const genderOption = document.querySelector("#genderSelect");
+        //const genderOption = document.querySelector("#genderSelect");
         /*用index傳入*/
 /*    $("#genderSelect").append("<option >男</option>");*/
 
-    async function LoadGender() {
+    @*async function LoadGender() {
         const responseGender = await fetch('@Url.Content("~/LogApi/showGender")');
 
         console.log(responseGender);
@@ -121,7 +124,7 @@
 
             });
         };
-        LoadGender();
+        LoadGender();*@
 
     </script>
 }

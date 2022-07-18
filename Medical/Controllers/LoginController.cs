@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -12,10 +14,13 @@ namespace Medical.Controllers
 {
     public class LoginController : Controller
     {
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
+        private readonly MedicalContext _context;
+
+        public LoginController(MedicalContext context)  //注入
+        {
+            _context = context;
+        }
+        //======================================================================
         //public IActionResult AdminLoginMemberList()   //管理員帳號登入=>會員清單管理
         //{
         //    if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USE))  //TODO 還需要寫一個getSession(登出)/未驗證身分
@@ -82,49 +87,42 @@ namespace Medical.Controllers
 
         public IActionResult Register()
         {
-
-            return View();
+            CRegisterViewModel regVModel = new CRegisterViewModel()
+            {
+                mem = _context.Members.ToList(),
+                roleTypes = _context.RoleTypes.ToList(),
+                MemCity=_context.Cities.ToList(),
+                MemGender=_context.Genders.ToList()
+            };
+            return View(regVModel);
         }
 
-        //[HttpPost]
-        //public IActionResult Register(CRegisterViewModel vModel)  //Ver.1.0可用
-        //{
-        //    MedicalContext medicalDb = new MedicalContext();
-        //    medicalDb.Members.Add(vModel.member);
-        //    //Member m = medicalDb.Members.Where(n => n.Gender.GenderId == vModel.GenderId).FirstOrDefault();
-
-        //    medicalDb.SaveChanges();
-        //    return RedirectToAction("Index", "Home");
-        //}
         [HttpPost]
         public IActionResult Register(CRegisterViewModel vModel)
         {
-            MedicalContext medicalDb = new MedicalContext();
-            medicalDb.Members.Add(vModel.member);
-            //================================
+            if (vModel != null)
+            {
 
-            //MedicalContext medicalDb = new MedicalContext();
-            ////IEnumerable<CRegisterViewModel> vModel = null;
-            //var q = from c in medicalDb.Members
-            //        join m in medicalDb.Cities on c.CityId equals m.CityId
-            //        join n in medicalDb.Genders on c.GenderId equals n.GenderId
-            //        select new CRegisterViewModel
-            //        {
-            //            IdentityId = c.IdentityId,
-            //            Password = c.Password,
-            //            MemberName = c.MemberName,
-            //            BirthDay = c.BirthDay,
-            //            GenderId = n.Gender1,
-            //            Email = c.Email,
-            //            Phone = c.Phone,
-            //            Role = c.Role,
-            //            CityId = c.CityId,
-            //            Address = c.Address
-            //        };
-            //================================
-            medicalDb.SaveChanges();
+                sendMail();
+
+                _context.Members.Add(vModel.member);
+                _context.SaveChanges();
+            }
             return RedirectToAction("Index", "Home");
         }
+
+
+        private void sendMail()
+        {
+            string mailContent = String.Empty;
+            mailContent += "<h1>請確認您的信箱</h1>";
+            mailContent += "此信件由系統自動發送";
+       
+        }
+
+
+
+
 
         //public IActionResult Delete(int? id)
         //{
@@ -139,40 +137,6 @@ namespace Medical.Controllers
         //}
 
 
-        //public IActionResult Edit(int? id)
-        //{
-        //    MedicalContext db = new MedicalContext();
-        //    Member mem = db.Members.FirstOrDefault(c => c.MemberId == id);
-        //    if (mem == null)
-        //        return RedirectToAction("Index", "Home");
-        //    return View(mem);
-        //}
-        //[HttpPost]
-        //public IActionResult Edit(Member p)
-        //{
-        //    MedicalContext db = new MedicalContext();
-        //    Member mem = db.Members.FirstOrDefault(c => c.MemberId == p.MemberId);
-        //    if (mem != null)
-        //    { 
-        //        mem.IdentityId = p.IdentityId;   
-        //        mem.Password = p.Password;
-        //        mem.MemberName = p.MemberName;
-        //        mem.BirthDay = p.BirthDay;
-        //        mem.GenderId = p.GenderId;
-        //        mem.BloodType = p.BloodType;
-        //        mem.Weight = p.Weight;
-        //        mem.IcCardNo = p.IcCardNo;
-        //        mem.Phone = p.Phone;
-        //        mem.Email = p.Email; 
-        //        mem.Role = p.Role;
-        //        mem.CityId = p.CityId;
-        //        mem.Address = p.Address;
-
-
-        //        db.SaveChanges();
-        //    }
-        //    return RedirectToAction("AdminLoginMemberList", "Login");
-        //}
         public IActionResult Logout()
         {
             if (HttpContext.Session.Keys.Contains(CDictionary.SK_LOGINED_USE))
@@ -185,6 +149,52 @@ namespace Medical.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public IActionResult ForgetPassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult ForgetPassword(string email)
+        {
+            Member x =_context.Members.FirstOrDefault(q => q.Email.Contains(email));
+            if (x != null)
+            {
+                CRegisterViewModel.gmail = email;
+                string account = "giraffegtest@gmail.com";
+                string password = "ahhpp5000";    
+                SmtpClient client = new SmtpClient();
+                client.Host = "smtp.gmail.com"; //設定google server
+                client.Port = 587;              //google port
+                client.Credentials = new NetworkCredential(account, password);  //寄信人
+                client.EnableSsl = true;           //是否啟用SSL驗證  =>SSL憑證是在網頁伺服器(主機)與網頁瀏覽器(客戶端)之間建立一個密碼連結的標準規範
 
+                MailMessage mail = new MailMessage();
+                mail.From = new MailAddress(account);
+                mail.To.Add(email);
+                mail.Subject = "KitchenGo";
+                mail.SubjectEncoding = System.Text.Encoding.UTF8;
+                mail.IsBodyHtml = true;
+                mail.Body = "<h1>親愛的會員您好:</h1><br><h2>如欲重新設定密碼<a href='https://localhost:44302/Login/ResetPassword'>請點我</a></h2>";
+                mail.BodyEncoding = System.Text.Encoding.UTF8;
+                try
+                {
+                    client.Send(mail);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
+                finally
+                {
+                    mail.Dispose();
+                    client.Dispose();//釋放資源
+                }
+                return Content("<script>alert('信件已送出!請到註冊的信箱查看');window.location.href='https://localhost:44302/'</script>", "text/html", System.Text.Encoding.UTF8);
             }
+            else
+                return Content("<script>alert('您不是會員!請先加入會員!');window.location.href='https://localhost:44302/'</script>", "text/html", System.Text.Encoding.UTF8);
+
+        }
+
+    }
 }

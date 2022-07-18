@@ -14,7 +14,7 @@ namespace Medical.ViewModel
         {
             _Member = new Member();
         }
-
+        public List<Member>mem { get; set; }
         public Member Member
         {
             get { return _Member; }

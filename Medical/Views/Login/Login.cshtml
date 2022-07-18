@@ -15,13 +15,13 @@
             <div class="form-group">
                 帳號
                 <label asp-for="txtAccount" class="control-label"></label>
-                <input asp-for="txtAccount" class="form-control mb-2" value="" id="email"/>
+                <input asp-for="txtAccount" class="form-control mb-2" value="" id="email" />
                 <span asp-validation-for="txtAccount" class="text-danger"></span>
             </div>
             <div class="form-group">
                 密碼
                 <label asp-for="txtPassword" class="control-label"></label>
-                <input asp-for="txtPassword" class="form-control mb-2" id="pass"/>
+                <input asp-for="txtPassword" class="form-control mb-2" id="pass" />
                 <span asp-validation-for="txtPassword" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -32,6 +32,10 @@
                 <input type="button" value="AdminDemo" class="btn btn-primary mb-2" id="adDemo" />
                 <input type="button" value="DoctorDemo" class="btn btn-primary mb-2" id="docDemo" />
                 <input type="button" value="CustomerDemo" class="btn btn-primary mb-2" id="cusDemo" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="忘記密碼" class="btn btn-primary mb-2" />
+                <a asp-action="ForgetPassword" class="btn btn-primary mb-2">忘記密碼</a>
             </div>
         </form>
     </div>
