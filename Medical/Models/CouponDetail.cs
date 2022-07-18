@@ -18,6 +18,9 @@ namespace Medical.Models
         public bool CouponUsed { get; set; }
 
         public virtual Coupon Coupon { get; set; }
+
+        public virtual Member Member { get; set; }
+
         public virtual ICollection<Order> Orders { get; set; }
     }
 }
