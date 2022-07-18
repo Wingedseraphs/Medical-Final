@@ -54,8 +54,8 @@ namespace Medical.Controllers
         }
 
         public void Method(CClinicDetailViewModel cVM) {
-            var result = _medicalContext.ClinicDetails.Where(x => x.ClinicDetailId.Equals(cVM.id));
-            var resultDoctor = _medicalContext.Doctors.Where(x => x.DoctorName.Equals(cVM.doctor)).SingleOrDefault();
+            var result = _medicalContext.ClinicDetails.Where(x => x.ClinicDetailId.Equals(cVM.clinicDetailId));
+            var resultDoctor = _medicalContext.Doctors.Where(x => x.DoctorName.Equals(cVM.doctorname)).SingleOrDefault();
             cVM.DoctorId = resultDoctor.DoctorId;
             cVM.DepartmentId = resultDoctor.DepartmentId;
 
@@ -75,8 +75,8 @@ namespace Medical.Controllers
             {
                 DoctorId = cVM.DoctorId,
                 DepartmentId = cVM.DepartmentId,
-                PeriodId = cVM.period,
-                RoomId = cVM.room,
+                PeriodId = cVM.periodID,
+                RoomId = cVM.roomID,
                 Online = 0,
                 ClinicDate = cVM.date
             };
@@ -87,13 +87,13 @@ namespace Medical.Controllers
         }
         public void Update(CClinicDetailViewModel cVM)
         {
-            ClinicDetail clinicDetail = _medicalContext.ClinicDetails.Where(x => x.ClinicDetailId.Equals(cVM.id)).FirstOrDefault();
+            ClinicDetail clinicDetail = _medicalContext.ClinicDetails.Where(x => x.ClinicDetailId.Equals(cVM.clinicDetailId)).FirstOrDefault();
             
             if(clinicDetail != null)
             {
                 clinicDetail.DoctorId = cVM.DoctorId;
-                clinicDetail.PeriodId = cVM.period;
-                clinicDetail.RoomId = cVM.room;
+                clinicDetail.PeriodId = cVM.periodID;
+                clinicDetail.RoomId = cVM.roomID;
                 clinicDetail.ClinicDate = cVM.date;
                 _medicalContext.SaveChanges();
             }

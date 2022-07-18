@@ -57,11 +57,11 @@ namespace Medical.ViewModels
             set { _caseRecord.ReserveId = value; }
         }
        
-        public string SyndromeDescription
-        {
-            get { return _caseRecord.SyndromeDescription; }
-            set { _caseRecord.SyndromeDescription = value; }
-        }
+        //public string SyndromeDescription
+        //{
+        //    get { return _caseRecord.SyndromeDescription; }
+        //    set { _caseRecord.SyndromeDescription = value; }
+        //}
         
         public int? TreatmentDetailId
         {

@@ -31,11 +31,11 @@ namespace Medical.ViewModel
             get { return _reserve.ClinicDetailId; }
             set { _reserve.ClinicDetailId = value; }
         }
-        public int? StateId
-        {
-            get { return _reserve.StateId; }
-            set { _reserve.StateId = value; }
-        }
+        //public int? StateId
+        //{
+        //    get { return _reserve.StateId; }
+        //    set { _reserve.StateId = value; }
+        //}
         public int MemberId
         {
             get { return _reserve.MemberId; }
@@ -57,11 +57,11 @@ namespace Medical.ViewModel
             get { return _reserve.RemarkAdmin; }
             set { _reserve.RemarkAdmin = value; }
         }
-        public int? SourceId
-        {
-            get { return _reserve.SourceId; }
-            set { _reserve.SourceId = value; }
-        }
+        //public int? SourceId
+        //{
+        //    get { return _reserve.SourceId; }
+        //    set { _reserve.SourceId = value; }
+        //}
 
         public virtual ClinicDetail ClinicDetail
         {
@@ -73,16 +73,16 @@ namespace Medical.ViewModel
             get { return _reserve.Member; }
             set { _reserve.Member = value; }
         }
-        public virtual Source Source
-        {
-            get { return _reserve.Source; }
-            set { _reserve.Source = value; }
-        }
-        public virtual State State
-        {
-            get { return _reserve.State; }
-            set { _reserve.State = value; }
-        }
+        //public virtual Source Source
+        //{
+        //    get { return _reserve.Source; }
+        //    set { _reserve.Source = value; }
+        //}
+        //public virtual State State
+        //{
+        //    get { return _reserve.State; }
+        //    set { _reserve.State = value; }
+        //}
         public virtual ICollection<CaseRecord> CaseRecords
         {
             get { return _reserve.CaseRecords; }

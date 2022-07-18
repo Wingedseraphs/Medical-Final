@@ -30,14 +30,13 @@ namespace Medical.Models
         public string IcCardNo { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        public int? OdRight { get; set; }
-        public int? OsLeft { get; set; }
         public int? Role { get; set; }
         public int? CityId { get; set; }
         public string Address { get; set; }
 
         public virtual City City { get; set; }
         public virtual Gender Gender { get; set; }
+        public virtual RoleType RoleNavigation { get; set; }
         public virtual ICollection<ArticleComment> ArticleComments { get; set; }
         public virtual ICollection<CaseRecord> CaseRecords { get; set; }
         public virtual ICollection<CouponDetail> CouponDetails { get; set; }
